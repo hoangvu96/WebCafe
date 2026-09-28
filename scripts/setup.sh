@@ -17,11 +17,7 @@ if ! wp core is-installed; then
 fi
 
 wp language core install vi --activate
-# WooCommerce mới nhất yêu cầu WordPress >= 7.0, nhưng image wordpress:6-php8.2-apache
-# ghim core ở nhánh 6.x (hiện là 6.9.4). Ghim WooCommerce 11.0.1 (bản mới nhất còn
-# tương thích "Requires at least: 6.9") để cài đặt không bị lỗi.
-wp plugin install woocommerce --version=11.0.1 --activate
-wp plugin install kadence-blocks kadence-starter-templates --activate
+wp plugin install woocommerce kadence-blocks kadence-starter-templates --activate
 wp theme install kadence
 wp theme activate cafe-child
 wp plugin activate cafe-core
