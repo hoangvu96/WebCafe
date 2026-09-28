@@ -27,8 +27,9 @@ return array(
 			'category'    => 'robusta',
 			'type'        => 'variable',
 			'prices'      => array( '250g' => 95000, '500g' => 180000, '1kg' => 340000 ),
-			// 250g tồn nhiều vì test E2E mua biến thể này nhiều lần; 1kg tồn thấp để minh hoạ cảnh báo sắp hết hàng.
-			'stock'       => array( '250g' => 500, '500g' => 20, '1kg' => 3 ),
+			// Test E2E mua biến thể 250g; globalTeardown huỷ và xoá đơn test nên tồn kho được trả lại sau mỗi lần chạy.
+			// 1kg tồn thấp để minh hoạ cảnh báo sắp hết hàng.
+			'stock'       => array( '250g' => 30, '500g' => 20, '1kg' => 3 ),
 			'label'       => array( 'ROBUSTA', 'Buôn Ma Thuột' ),
 			'short'       => 'Robusta rang đậm, đắng sô-cô-la, hợp pha phin sữa đá.',
 			'description' => 'Hạt Robusta chín đỏ từ vùng đất đỏ bazan Buôn Ma Thuột, rang đậm theo mẻ nhỏ. Thân dày, đắng rõ, hậu ngọt – đúng chất cà phê phin truyền thống.',

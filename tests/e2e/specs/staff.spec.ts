@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { addRobustaToCart, loginAsStaff, placeCodOrder } from '../helpers';
+import { addRobustaToCart, loginAsStaff, placeCodOrder, PRODUCT_PATH } from '../helpers';
 
 test('nhân viên đánh dấu Đã giao từ trang Tổng quan', async ({ browser, page }) => {
 	const customer = await browser.newPage();
@@ -15,6 +15,9 @@ test('nhân viên đánh dấu Đã giao từ trang Tổng quan', async ({ brows
 
 	await page.reload();
 	await expect(page.locator(`tr[data-order-id="${orderId}"]`)).toHaveCount(0);
+
+	await page.goto(`/wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`);
+	await expect(page.locator('#order_status')).toHaveValue('wc-completed');
 });
 
 test('nhân viên xem được Tồn kho', async ({ page }) => {
@@ -24,8 +27,13 @@ test('nhân viên xem được Tồn kho', async ({ page }) => {
 });
 
 test('nhân viên không vào được cài đặt và không sửa được sản phẩm', async ({ page }) => {
+	await page.goto(PRODUCT_PATH);
+	const productId = await page.locator('form.cart input[name="product_id"]').inputValue(); // Robusta Buôn Ma Thuột (CF-ROB-BMT)
+	expect(productId).toMatch(/^\d+$/);
+
 	await loginAsStaff(page);
 	for (const path of [
+		`/wp-admin/post.php?post=${productId}&action=edit`,
 		'/wp-admin/admin.php?page=wc-settings',
 		'/wp-admin/admin.php?page=cafe-settings',
 		'/wp-admin/post-new.php?post_type=product',
