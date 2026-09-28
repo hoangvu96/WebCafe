@@ -28,6 +28,7 @@ wp language theme install --all vi || true
 wp rewrite structure '/%postname%/'
 wp eval-file /scripts/setup/options.php
 wp eval-file /scripts/setup/pages.php
+wp eval-file /scripts/setup/shipping.php
 wp rewrite flush
 
 echo "Xong: $WP_URL  (quản trị: $WP_URL/wp-admin)"
