@@ -21,14 +21,29 @@ add_action(
 	20
 );
 
+add_action(
+	'after_setup_theme',
+	static function (): void {
+		load_child_theme_textdomain( 'cafe-child', get_stylesheet_directory() . '/languages' );
+	}
+);
+
+/**
+ * Site đang dùng tiếng Việt? (chỉ khi đó mới điền các chuỗi còn thiếu bản dịch bên dưới).
+ */
+function cafe_child_is_vi_locale(): bool {
+	return 0 === strpos( determine_locale(), 'vi' );
+}
+
 /**
  * Việt hoá vài chuỗi hiển thị của Kadence/WooCommerce chưa có bản dịch tiếng Việt.
+ * Chỉ thay khi locale là tiếng Việt và chuỗi chưa được dịch, để không đè bản dịch chính thức.
  */
 add_filter(
 	'gettext',
 	static function ( string $translation, string $text, string $domain ): string {
 		static $kadence = null;
-		if ( 'kadence' !== $domain ) {
+		if ( 'kadence' !== $domain || $translation !== $text || ! cafe_child_is_vi_locale() ) {
 			return $translation;
 		}
 		if ( null === $kadence ) {
@@ -54,7 +69,8 @@ add_filter(
 add_filter(
 	'gettext_with_context',
 	static function ( string $translation, string $text, string $context, string $domain ): string {
-		if ( 'woocommerce' === $domain && 'shipping packages' === $context && 'Shipment' === $text ) {
+		if ( 'woocommerce' === $domain && 'shipping packages' === $context && 'Shipment' === $text
+			&& $translation === $text && cafe_child_is_vi_locale() ) {
 			return __( 'Vận chuyển', 'cafe-child' );
 		}
 		return $translation;
