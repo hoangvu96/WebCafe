@@ -109,13 +109,6 @@ h1, h2, h3, h4, h5, h6, .site-title, .product_title {
 	.woocommerce ul.products li.product .button { width: 100%; padding: 8px 6px; font-size: 15px; }
 }
 
-/* Thanh toán: ô Email (form-row-last) đứng trước cặp Tỉnh/Phường làm lệch hàng float – cho Email chiếm cả dòng;
-   trên điện thoại mọi ô đều chiếm cả dòng. */
-.woocommerce-checkout #billing_email_field { float: none; clear: both; width: 100%; }
-@media (max-width: 600px) {
-	.woocommerce-checkout .woocommerce-billing-fields .form-row { float: none; width: 100%; }
-}
-
 /* Header điện thoại: logo và nút menu cách mép màn hình bằng lề nội dung (mẫu import để lề 0) */
 @media (max-width: 1024px) {
 	#mobile-header .site-container {

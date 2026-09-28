@@ -37,14 +37,30 @@ final class CheckoutFields {
 			$fields['first_name'],
 			array( 'label' => __( 'Họ và tên', 'cafe-core' ), 'class' => array( 'form-row-wide' ), 'priority' => 10 )
 		);
+
+		// WC_Countries::get_default_address_fields() có sẵn trường 'phone' (không tiền tố billing_).
+		// Đây chính là bản mà WooCommerce đóng gói vào wc_address_i18n_params.locale['default'] cho
+		// address-i18n.js dùng khi sắp xếp lại các dòng form lúc chạy 'country_to_state_changing'
+		// (kích hoạt ngay khi trang tải xong, và lại mỗi lần cập nhật checkout qua AJAX).
+		// Nếu chỉ đổi priority của 'billing_phone' ở billing_fields() (lọc woocommerce_billing_fields)
+		// mà bỏ qua trường 'phone' gốc ở đây, JS phía trình duyệt sẽ đọc lại priority=100 mặc định của
+		// WooCommerce và priority=20 chỉ có tác dụng khi trang mới tải server hoặc JS chưa chạy —
+		// ngay khi address-i18n.js chạy xong, Số điện thoại bị đẩy xuống cuối form dù HTML server đã đúng thứ tự.
+		if ( isset( $fields['phone'] ) ) {
+			$fields['phone'] = array_merge(
+				$fields['phone'],
+				array( 'label' => __( 'Số điện thoại', 'cafe-core' ), 'type' => 'tel', 'required' => true, 'class' => array( 'form-row-wide' ), 'priority' => 20 )
+			);
+		}
+
 		$fields['city']       = array_merge(
 			$fields['city'],
-			array( 'label' => __( 'Tỉnh/Thành phố', 'cafe-core' ), 'required' => true, 'class' => array( 'form-row-first', 'address-field' ), 'priority' => 40 )
+			array( 'label' => __( 'Tỉnh/Thành phố', 'cafe-core' ), 'required' => true, 'class' => array( 'form-row-wide', 'address-field' ), 'priority' => 40 )
 		);
 		$fields['ward']       = array(
 			'label'    => __( 'Phường/Xã/Đặc khu', 'cafe-core' ),
 			'required' => true,
-			'class'    => array( 'form-row-last' ),
+			'class'    => array( 'form-row-wide' ),
 			'priority' => 50,
 		);
 		$fields['address_1']  = array_merge(
@@ -61,16 +77,18 @@ final class CheckoutFields {
 	}
 
 	public static function billing_fields( array $fields ): array {
+		// form-row-wide cho cả 4 trường (thay vì cặp nửa dòng form-row-first/last): đơn giản hơn,
+		// không phụ thuộc thứ tự DOM để căn đúng cột, và hiển thị tốt trên di động.
 		if ( isset( $fields['billing_phone'] ) ) {
 			$fields['billing_phone'] = array_merge(
 				$fields['billing_phone'],
-				array( 'label' => __( 'Số điện thoại', 'cafe-core' ), 'type' => 'tel', 'required' => true, 'class' => array( 'form-row-first' ), 'priority' => 20 )
+				array( 'label' => __( 'Số điện thoại', 'cafe-core' ), 'type' => 'tel', 'required' => true, 'class' => array( 'form-row-wide' ), 'priority' => 20 )
 			);
 		}
 		if ( isset( $fields['billing_email'] ) ) {
 			$fields['billing_email'] = array_merge(
 				$fields['billing_email'],
-				array( 'label' => __( 'Email (để nhận xác nhận đơn)', 'cafe-core' ), 'required' => false, 'class' => array( 'form-row-last' ), 'priority' => 30 )
+				array( 'label' => __( 'Email (để nhận xác nhận đơn)', 'cafe-core' ), 'required' => false, 'class' => array( 'form-row-wide' ), 'priority' => 30 )
 			);
 		}
 		return $fields;
