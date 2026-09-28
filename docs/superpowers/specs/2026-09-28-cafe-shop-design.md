@@ -10,7 +10,7 @@ Website bán **cà phê đóng gói** (hạt rang, bột xay, phin giấy, hoà 
 ### Trong phạm vi giai đoạn 1
 - Trang bán hàng dựng từ mẫu Kadence "Coffee Shop", đã Việt hoá và đổi phong cách.
 - Sản phẩm có biến thể theo **khối lượng × dạng xay**.
-- Thanh toán **COD** và **chuyển khoản VietQR**.
+- Thanh toán **COD** (thanh toán khi nhận hàng).
 - Phí ship **cố định**, miễn phí khi đơn đạt ngưỡng.
 - Khách mua **không cần tài khoản**.
 - Trang **Tổng quan** trong wp-admin, phân quyền nhân viên, làm gọn admin.
@@ -18,7 +18,7 @@ Website bán **cà phê đóng gói** (hạt rang, bột xay, phin giấy, hoà 
 - Dữ liệu mẫu: sản phẩm, ảnh, nội dung.
 
 ### Ngoài phạm vi (làm ở giai đoạn sau)
-Đa ngôn ngữ (Việt/Anh/Pháp/Ý, cần plugin trả phí), bán và giao hàng quốc tế, đa tiền tệ, blog, tài khoản khách hàng, đánh giá sản phẩm, mã giảm giá, chat Zalo/Messenger, kết nối API hãng vận chuyển, cổng thanh toán online (VNPay/MoMo), deploy lên VPS.
+Thanh toán chuyển khoản VietQR, đa ngôn ngữ (Việt/Anh/Pháp/Ý, cần plugin trả phí), bán và giao hàng quốc tế, đa tiền tệ, blog, tài khoản khách hàng, đánh giá sản phẩm, mã giảm giá, chat Zalo/Messenger, kết nối API hãng vận chuyển, cổng thanh toán online (VNPay/MoMo), deploy lên VPS.
 
 ### Ràng buộc để mở rộng sau này
 - Toàn bộ chuỗi hiển thị trong child theme và plugin dùng hàm dịch của WordPress (`__()`, `_e()`, text domain riêng), để sau này thêm plugin đa ngôn ngữ mà không phải sửa code.
@@ -40,7 +40,7 @@ Website bán **cà phê đóng gói** (hạt rang, bột xay, phin giấy, hoà 
 | Kadence Blocks | Plugin (free) | Các block dựng trang |
 | Kadence Starter Templates | Plugin (free) | Import mẫu "Coffee Shop" |
 | `cafe-child` | Child theme (tự viết) | **Chỉ phần hình thức:** màu, font, CSS, override template khi cần |
-| `cafe-core` | Plugin (tự viết) | **Toàn bộ logic nghiệp vụ:** thông tin hạt, checkout Việt Nam, VietQR, shipping, trang tổng quan, phân quyền, làm gọn admin |
+| `cafe-core` | Plugin (tự viết) | **Toàn bộ logic nghiệp vụ:** thông tin hạt, checkout Việt Nam, shipping, trang tổng quan, phân quyền, làm gọn admin |
 
 Nguyên tắc: đổi theme thì không mất chức năng, vì mọi chức năng đều nằm trong `cafe-core`.
 
@@ -57,7 +57,6 @@ web/
 │       └── includes/
 │           ├── bean-info/         # trường "Thông tin hạt"
 │           ├── checkout-vn/       # form thanh toán Việt Nam + validate SĐT
-│           ├── vietqr/            # cài đặt ngân hàng + render QR
 │           ├── shipping/          # phí cố định + ngưỡng miễn phí
 │           ├── dashboard/         # trang Tổng quan
 │           └── admin-roles/       # vai trò nhân viên + làm gọn menu
@@ -94,7 +93,7 @@ Chỉnh trong Kadence Global Palette và Typography:
 3. **Chi tiết sản phẩm:** gallery, chọn biến thể, khung "Thông tin hạt", sản phẩm liên quan.
 4. **Giỏ hàng.**
 5. **Thanh toán:** khách không cần tài khoản.
-6. **Cảm ơn:** hiện VietQR nếu khách chọn chuyển khoản.
+6. **Cảm ơn:** tóm tắt đơn, tổng tiền cần trả khi nhận hàng, thông tin liên hệ shop.
 7. **Liên hệ:** địa chỉ, số điện thoại, Google Maps nhúng.
 8. **Chính sách:** giao hàng, đổi trả, bảo mật (trang chữ).
 
@@ -126,18 +125,13 @@ Robusta, Arabica, Culi, Blend, Phin giấy, Hoà tan. Khoảng 10–12 sản ph�
 
 ## 4. Thanh toán và quy trình đơn
 
+Giai đoạn 1 chỉ có **COD**. Tắt các phương thức thanh toán khác của WooCommerce (BACS, séc…).
+
 | Phương thức | Trạng thái ban đầu | Chuyển tiếp |
 |---|---|---|
-| COD | Đang xử lý | Nhân viên chuyển sang Hoàn thành khi giao xong |
-| Chuyển khoản (VietQR) | Chờ thanh toán (on-hold) | Bấm "Đã nhận tiền" thì chuyển sang Đang xử lý, sau đó Hoàn thành |
+| COD | Đang xử lý | Nhân viên chuyển sang Hoàn thành khi giao xong. Nếu khách huỷ hoặc không nhận hàng thì chuyển sang Đã huỷ |
 
-### Module `vietqr`
-- **Cài đặt:** mã ngân hàng (BIN hoặc mã viết tắt theo danh sách VietQR), số tài khoản, tên chủ tài khoản.
-- Mở rộng phương thức chuyển khoản (BACS) của WooCommerce: trang Cảm ơn (và email nếu có) hiện ảnh QR lấy từ
-  `https://img.vietqr.io/image/{bank}-{account}-compact2.png?amount={tổng}&addInfo={nội dung}&accountName={tên}`.
-- **Nội dung chuyển khoản:** `DH{mã đơn}`, ví dụ `DH1024`. Chỉ gồm chữ không dấu và số.
-- Bên dưới QR luôn hiện đầy đủ thông tin dạng chữ: ngân hàng, số tài khoản, chủ tài khoản, số tiền, nội dung.
-- Không tự động đối soát giao dịch. Nhân viên xác nhận thủ công.
+Giai đoạn sau sẽ thêm module `vietqr` (chuyển khoản qua mã VietQR). `cafe-core` được tổ chức theo module nên có thể thêm vào mà không phải sửa các module khác.
 
 ## 5. Trang quản lý
 
@@ -145,7 +139,7 @@ Robusta, Arabica, Culi, Blend, Phin giấy, Hoà tan. Khoảng 10–12 sản ph�
 Là màn hình đầu tiên sau khi đăng nhập, dành cho Quản trị viên, Quản lý cửa hàng và Nhân viên bán hàng.
 
 - **Thẻ số liệu:** doanh thu hôm nay, 7 ngày, tháng này; số đơn mới hôm nay. Doanh thu tính trên các đơn có trạng thái Đang xử lý và Hoàn thành.
-- **Đơn chờ xác nhận chuyển khoản:** danh sách đơn on-hold thanh toán BACS, mỗi đơn có nút **"Đã nhận tiền"**. Nút này dùng AJAX, có kiểm tra nonce và quyền `edit_shop_orders`, và chuyển đơn sang Đang xử lý.
+- **Đơn cần xử lý:** danh sách đơn ở trạng thái Đang xử lý (tên khách, số điện thoại, tổng tiền, thời gian đặt), mỗi đơn có nút **"Đã giao"**. Nút này dùng AJAX, có kiểm tra nonce và quyền `edit_shop_orders`, và chuyển đơn sang Hoàn thành.
 - **Sắp hết hàng:** các biến thể hoặc sản phẩm có tồn kho ≤ ngưỡng, dùng ngưỡng "low stock" của WooCommerce (mặc định 5).
 - **Top 5 sản phẩm bán chạy** trong 30 ngày.
 - **Biểu đồ cột doanh thu** 30 ngày, dùng Chart.js nạp cục bộ.
@@ -168,23 +162,21 @@ Là màn hình đầu tiên sau khi đăng nhập, dành cho Quản trị viên,
 
 - **Hết hàng:** WooCommerce chặn chọn biến thể đã hết và chặn đặt quá số lượng tồn.
 - **Form thanh toán:** báo lỗi rõ ràng bằng tiếng Việt cho từng trường sai.
-- **VietQR không tải được:** ảnh có `alt` và thông tin chữ luôn hiển thị, nên khách vẫn chuyển khoản được.
-- **Chưa cấu hình ngân hàng:** ẩn phương thức chuyển khoản ở trang thanh toán và hiện thông báo trong admin.
-- **Nút "Đã nhận tiền" gọi lỗi** (hết phiên, thiếu quyền): hiện thông báo lỗi và không đổi trạng thái đơn.
+- **Nút "Đã giao" gọi lỗi** (hết phiên, thiếu quyền): hiện thông báo lỗi và không đổi trạng thái đơn.
 
 ## 7. Kiểm thử
 
-- **PHPUnit** (chạy trong Docker) cho `cafe-core`: tạo nội dung chuyển khoản, dựng URL VietQR, validate số điện thoại, tính phí ship và ngưỡng miễn phí, tính số liệu tổng quan, capability của `cafe_staff`.
+- **PHPUnit** (chạy trong Docker) cho `cafe-core`: validate số điện thoại, tính phí ship và ngưỡng miễn phí, tính số liệu tổng quan, capability của `cafe_staff`.
 - **Playwright E2E:**
   1. Khách: trang chủ, chọn sản phẩm (khối lượng + dạng xay), giỏ hàng, thanh toán COD, trang cảm ơn.
-  2. Khách: thanh toán chuyển khoản, trang cảm ơn có QR đúng số tiền và nội dung.
-  3. Nhân viên: đăng nhập, thấy đơn chờ xác nhận, bấm "Đã nhận tiền", đơn chuyển sang Đang xử lý.
+  2. Khách: đơn đạt ngưỡng thì phí ship bằng 0, dưới ngưỡng thì tính 30.000đ.
+  3. Nhân viên: đăng nhập, thấy đơn mới trong "Đơn cần xử lý", bấm "Đã giao", đơn chuyển sang Hoàn thành.
   4. Nhân viên: không vào được Cài đặt WooCommerce, không sửa được giá.
 - **Kiểm tra thủ công:** hiển thị trên điện thoại (iOS/Android) và máy tính, tốc độ tải trang chủ và trang sản phẩm.
 
 ## 8. Tiêu chí hoàn thành
 
 - `docker compose up` cùng script cài đặt dựng được site đầy đủ kèm dữ liệu mẫu trên máy mới.
-- Khách đặt được đơn COD và đơn chuyển khoản trên điện thoại. Trang cảm ơn hiện QR đúng.
-- Nhân viên xác nhận được đơn chuyển khoản từ trang Tổng quan, và bị giới hạn quyền đúng như bảng ở Mục 5.
+- Khách đặt được đơn COD trên điện thoại, phí ship tính đúng theo ngưỡng.
+- Nhân viên đánh dấu "Đã giao" được từ trang Tổng quan, và bị giới hạn quyền đúng như bảng ở Mục 5.
 - Toàn bộ test PHPUnit và Playwright đều pass.
