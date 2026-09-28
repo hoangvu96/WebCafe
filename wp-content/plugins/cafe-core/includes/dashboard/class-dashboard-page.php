@@ -10,6 +10,7 @@ final class DashboardPage {
 	public const INVENTORY_SLUG = 'cafe-inventory';
 	public const CACHE_KEY      = 'cafe_dashboard_metrics';
 	public const PENDING_LIMIT  = 20;
+	public const NONCE_ACTION   = 'cafe_mark_delivered';
 
 	public static function register(): void {
 		add_action( 'admin_menu', array( self::class, 'menu' ) );
@@ -17,6 +18,7 @@ final class DashboardPage {
 		add_action( 'woocommerce_new_order', array( self::class, 'flush_cache' ) );
 		add_action( 'woocommerce_order_status_changed', array( self::class, 'flush_cache' ) );
 		add_filter( 'login_redirect', array( self::class, 'login_redirect' ), 10, 3 );
+		add_action( 'wp_ajax_cafe_mark_delivered', array( self::class, 'mark_delivered' ) );
 	}
 
 	public static function menu(): void {
@@ -54,10 +56,51 @@ final class DashboardPage {
 	}
 
 	public static function assets(): void {
-		if ( ! in_array( self::current_page(), array( self::SLUG, self::INVENTORY_SLUG ), true ) ) {
+		$page = self::current_page();
+		if ( ! in_array( $page, array( self::SLUG, self::INVENTORY_SLUG ), true ) ) {
 			return;
 		}
-		wp_enqueue_style( 'cafe-dashboard', plugin_dir_url( __FILE__ ) . 'assets/dashboard.css', array(), CAFE_CORE_VERSION );
+
+		$base = plugin_dir_url( __FILE__ ) . 'assets/';
+		wp_enqueue_style( 'cafe-dashboard', $base . 'dashboard.css', array(), CAFE_CORE_VERSION );
+		if ( self::SLUG !== $page ) {
+			return;
+		}
+
+		wp_enqueue_script( 'cafe-chartjs', $base . 'vendor/chart.umd.js', array(), '4.4.4', true );
+		wp_enqueue_script( 'cafe-dashboard', $base . 'dashboard.js', array( 'cafe-chartjs' ), CAFE_CORE_VERSION, true );
+
+		$daily  = self::metrics()['daily'];
+		$config = array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( self::NONCE_ACTION ),
+			'chart'   => array(
+				'labels' => array_map( static fn( string $day ): string => substr( $day, 8, 2 ) . '/' . substr( $day, 5, 2 ), array_keys( $daily ) ),
+				'values' => array_values( $daily ),
+			),
+			'i18n'    => array(
+				'revenue' => __( 'Doanh thu', 'cafe-core' ),
+				'error'   => __( 'Không cập nhật được đơn hàng. Vui lòng tải lại trang và thử lại.', 'cafe-core' ),
+			),
+		);
+		wp_add_inline_script( 'cafe-dashboard', 'window.cafeDashboard = ' . wp_json_encode( $config ) . ';', 'before' );
+	}
+
+	public static function mark_delivered(): void {
+		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'Phiên làm việc đã hết hạn. Vui lòng tải lại trang.', 'cafe-core' ) ), 403 );
+		}
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Bạn không có quyền cập nhật đơn hàng.', 'cafe-core' ) ), 403 );
+		}
+
+		$order = wc_get_order( absint( $_POST['order_id'] ?? 0 ) );
+		if ( ! $order instanceof \WC_Order || ! $order->has_status( 'processing' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Đơn hàng không tồn tại hoặc không còn ở trạng thái Đang xử lý.', 'cafe-core' ) ), 400 );
+		}
+
+		$order->update_status( 'completed', __( 'Nhân viên đánh dấu đã giao từ trang Tổng quan.', 'cafe-core' ), true );
+		wp_send_json_success( array( 'order_id' => $order->get_id() ) );
 	}
 
 	public static function render(): void {
