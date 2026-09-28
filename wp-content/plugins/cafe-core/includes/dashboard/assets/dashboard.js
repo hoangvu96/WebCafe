@@ -43,6 +43,14 @@
 					throw new Error(json && json.data && json.data.message ? json.data.message : config.i18n.error);
 				}
 				button.closest('tr').remove();
+
+				var countEl = document.querySelector('.cafe-pending-count');
+				if (countEl) {
+					var current = parseInt(countEl.textContent.replace(/\D/g, ''), 10);
+					if (!isNaN(current) && current > 0) {
+						countEl.textContent = String(current - 1);
+					}
+				}
 			})
 			.catch(function (error) {
 				button.disabled = false;

@@ -71,4 +71,51 @@ final class CheckoutFieldsTest extends TestCase {
 		$this->assertSame( 'Phường Bến Thành', $address['address_2'] );
 		$this->assertSame( 'An', $address['first_name'] );
 	}
+
+	public function test_formatted_address_does_not_clobber_legacy_address_2_when_ward_empty(): void {
+		$order = new class() {
+			public function get_meta( string $key ): string {
+				return '';
+			}
+		};
+		$address = CheckoutFields::formatted_address( array( 'address_2' => 'Legacy apt 4B' ), $order );
+		$this->assertSame( 'Legacy apt 4B', $address['address_2'] );
+	}
+
+	public function test_formatted_shipping_address_uses_shipping_ward(): void {
+		$order = new class() {
+			public function get_meta( string $key ): string {
+				if ( '_shipping_ward' === $key ) {
+					return 'Phường Thủ Đức';
+				}
+				if ( '_billing_ward' === $key ) {
+					return 'Phường Bến Thành';
+				}
+				return '';
+			}
+		};
+		$address = CheckoutFields::formatted_shipping_address( array( 'first_name' => 'An', 'address_2' => '' ), $order );
+		$this->assertSame( 'Phường Thủ Đức', $address['address_2'] );
+	}
+
+	public function test_formatted_shipping_address_falls_back_to_billing_ward_when_shipping_ward_empty(): void {
+		// Trường hợp ship_to_destination=billing_only: WooCommerce chỉ lưu _billing_ward.
+		$order = new class() {
+			public function get_meta( string $key ): string {
+				return '_billing_ward' === $key ? 'Phường Bến Thành' : '';
+			}
+		};
+		$address = CheckoutFields::formatted_shipping_address( array( 'address_2' => '' ), $order );
+		$this->assertSame( 'Phường Bến Thành', $address['address_2'] );
+	}
+
+	public function test_formatted_shipping_address_does_not_clobber_legacy_address_2_when_ward_empty(): void {
+		$order = new class() {
+			public function get_meta( string $key ): string {
+				return '';
+			}
+		};
+		$address = CheckoutFields::formatted_shipping_address( array( 'address_2' => 'Legacy apt 4B' ), $order );
+		$this->assertSame( 'Legacy apt 4B', $address['address_2'] );
+	}
 }

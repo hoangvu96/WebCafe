@@ -55,7 +55,15 @@ final class StoreData {
 	}
 
 	public static function processing_count(): int {
-		return count( wc_get_orders( array( 'type' => 'shop_order', 'status' => 'processing', 'limit' => -1, 'return' => 'ids' ) ) );
+		$result = wc_get_orders(
+			array(
+				'type'     => 'shop_order',
+				'status'   => 'processing',
+				'paginate' => true,
+				'limit'    => 1,
+			)
+		);
+		return (int) $result->total;
 	}
 
 	/**

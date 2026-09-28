@@ -9,14 +9,17 @@ defined( 'ABSPATH' ) || exit;
  * Form thanh toán theo địa chỉ Việt Nam 2 cấp (Tỉnh/Thành phố, Phường/Xã) và trang cảm ơn COD.
  */
 final class CheckoutFields {
-	public const HIDDEN_CLASS = 'cafe-hidden-field';
-	public const WARD_META    = '_billing_ward'; // WooCommerce tự lưu trường billing_ward vào meta này.
+	public const HIDDEN_CLASS       = 'cafe-hidden-field';
+	public const WARD_META          = '_billing_ward'; // WooCommerce tự lưu trường billing_ward vào meta này.
+	public const SHIPPING_WARD_META = '_shipping_ward'; // Khi ship_to_destination=billing_only WooCommerce sao chép billing sang shipping và lưu vào đây.
 
 	public static function register(): void {
 		add_filter( 'woocommerce_default_address_fields', array( self::class, 'address_fields' ), 20 );
 		add_filter( 'woocommerce_billing_fields', array( self::class, 'billing_fields' ), 20 );
 		add_filter( 'woocommerce_localisation_address_formats', array( self::class, 'address_formats' ), 20 );
 		add_filter( 'woocommerce_order_formatted_billing_address', array( self::class, 'formatted_address' ), 10, 2 );
+		add_filter( 'woocommerce_order_formatted_shipping_address', array( self::class, 'formatted_shipping_address' ), 10, 2 );
+		add_filter( 'woocommerce_validate_phone', array( self::class, 'validate_phone_filter' ), 10, 2 );
 		add_action( 'woocommerce_after_checkout_validation', array( self::class, 'validate' ), 10, 2 );
 		add_action( 'woocommerce_checkout_create_order', array( self::class, 'normalize_phone' ) );
 		add_action( 'woocommerce_thankyou_cod', array( self::class, 'thankyou_cod' ), 5 );
@@ -80,18 +83,53 @@ final class CheckoutFields {
 
 	/**
 	 * Hiển thị Phường/Xã ở dòng address_2 (trường address_2 gốc đã bị bỏ khỏi form).
+	 * Chỉ ghi đè khi có giá trị ward để không xoá mất address_2 của các đơn cũ.
 	 *
 	 * @param array  $address Địa chỉ thô.
 	 * @param object $order   WC_Order.
 	 */
 	public static function formatted_address( array $address, $order ): array {
-		$address['address_2'] = (string) $order->get_meta( self::WARD_META );
+		$ward = (string) $order->get_meta( self::WARD_META );
+		if ( '' !== $ward ) {
+			$address['address_2'] = $ward;
+		}
 		return $address;
+	}
+
+	/**
+	 * Hiển thị Phường/Xã ở dòng address_2 của địa chỉ giao hàng.
+	 * Khi ship_to_destination=billing_only, WooCommerce sao chép billing sang shipping
+	 * nhưng để chắc chắn (ví dụ đơn cũ trước khi bật tuỳ chọn này) vẫn dự phòng đọc _billing_ward.
+	 * Chỉ ghi đè khi có giá trị ward để không xoá mất address_2 của các đơn cũ.
+	 *
+	 * @param array  $address Địa chỉ thô.
+	 * @param object $order   WC_Order.
+	 */
+	public static function formatted_shipping_address( array $address, $order ): array {
+		$ward = (string) $order->get_meta( self::SHIPPING_WARD_META );
+		if ( '' === $ward ) {
+			$ward = (string) $order->get_meta( self::WARD_META );
+		}
+		if ( '' !== $ward ) {
+			$address['address_2'] = $ward;
+		}
+		return $address;
+	}
+
+	/**
+	 * Việt Nam hoá kiểm tra số điện thoại của WooCommerce (WC_Validation::is_phone).
+	 * Áp dụng chung vì cửa hàng chỉ bán trong nước.
+	 */
+	public static function validate_phone_filter( bool $valid, string $phone ): bool {
+		return '' === $phone || PhoneValidator::is_valid( $phone );
 	}
 
 	public static function validate( array $data, \WP_Error $errors ): void {
 		$phone = (string) ( $data['billing_phone'] ?? '' );
 		if ( '' !== $phone && ! PhoneValidator::is_valid( $phone ) ) {
+			// WooCommerce có thể đã thêm lỗi cùng mã (billing_phone_validation) ở validate_posted_data();
+			// xoá đi để chỉ còn đúng một thông báo tiếng Việt.
+			$errors->remove( 'billing_phone_validation' );
 			$errors->add(
 				'billing_phone_validation',
 				__( 'Số điện thoại không hợp lệ. Vui lòng nhập 10 số, bắt đầu bằng 0.', 'cafe-core' ),
@@ -124,7 +162,7 @@ final class CheckoutFields {
 				/* translators: %s: số điện thoại cửa hàng */
 				sprintf(
 					esc_html__( 'Cần hỗ trợ? Gọi %s', 'cafe-core' ),
-					'<a href="tel:' . esc_attr( PhoneValidator::normalize( $phone ) ) . '">' . esc_html( $phone ) . '</a>'
+					'<a href="' . esc_url( 'tel:' . PhoneValidator::normalize( $phone ) ) . '">' . esc_html( $phone ) . '</a>'
 				)
 			);
 		}

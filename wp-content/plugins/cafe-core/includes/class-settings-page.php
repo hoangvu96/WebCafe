@@ -46,6 +46,7 @@ final class SettingsPage {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Cài đặt cửa hàng cà phê', 'cafe-core' ); ?></h1>
+			<?php settings_errors(); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( self::GROUP ); ?>
 				<table class="form-table" role="presentation">

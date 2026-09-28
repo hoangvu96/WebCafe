@@ -24,6 +24,17 @@ require_once CAFE_CORE_DIR . 'includes/class-settings-page.php';
 require_once CAFE_CORE_DIR . 'includes/class-capabilities.php';
 
 add_action(
+	'before_woocommerce_init',
+	static function (): void {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			// Đã kiểm tra tương thích HPOS (bảng đơn hàng riêng); trang thanh toán chỉ dùng shortcode/classic nên không hỗ trợ block Cart & Checkout.
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', CAFE_CORE_FILE, true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', CAFE_CORE_FILE, false );
+		}
+	}
+);
+
+add_action(
 	'plugins_loaded',
 	static function (): void {
 		load_plugin_textdomain( 'cafe-core', false, dirname( plugin_basename( CAFE_CORE_FILE ) ) . '/languages' );

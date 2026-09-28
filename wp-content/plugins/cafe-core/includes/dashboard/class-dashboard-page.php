@@ -17,6 +17,10 @@ final class DashboardPage {
 		add_action( 'admin_enqueue_scripts', array( self::class, 'assets' ) );
 		add_action( 'woocommerce_new_order', array( self::class, 'flush_cache' ) );
 		add_action( 'woocommerce_order_status_changed', array( self::class, 'flush_cache' ) );
+		add_action( 'woocommerce_update_order', array( self::class, 'flush_cache' ) );
+		add_action( 'woocommerce_trash_order', array( self::class, 'flush_cache' ) );
+		add_action( 'woocommerce_delete_order', array( self::class, 'flush_cache' ) );
+		add_action( 'woocommerce_order_refunded', array( self::class, 'flush_cache' ) );
 		add_filter( 'login_redirect', array( self::class, 'login_redirect' ), 10, 3 );
 		add_action( 'wp_ajax_cafe_mark_delivered', array( self::class, 'mark_delivered' ) );
 	}
@@ -29,10 +33,18 @@ final class DashboardPage {
 	}
 
 	/**
+	 * Khoá cache theo ngày hiện tại (giờ địa phương) để tự làm mới lúc qua ngày mới,
+	 * không phải chờ cache 5 phút hết hạn hoặc có đơn hàng thay đổi.
+	 */
+	private static function cache_key(): string {
+		return self::CACHE_KEY . '_' . wp_date( 'Ymd' );
+	}
+
+	/**
 	 * Số liệu Tổng quan, cache 5 phút; xoá cache khi có đơn mới hoặc đơn đổi trạng thái.
 	 */
 	public static function metrics(): array {
-		$cached = get_transient( self::CACHE_KEY );
+		$cached = get_transient( self::cache_key() );
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
@@ -42,12 +54,12 @@ final class DashboardPage {
 		$since = min( $today->modify( '-' . ( Metrics::CHART_DAYS - 1 ) . ' days' ), $today->modify( 'first day of this month' ) );
 
 		$metrics = Metrics::summarize( StoreData::recent_orders( $since ), $now );
-		set_transient( self::CACHE_KEY, $metrics, 5 * MINUTE_IN_SECONDS );
+		set_transient( self::cache_key(), $metrics, 5 * MINUTE_IN_SECONDS );
 		return $metrics;
 	}
 
 	public static function flush_cache(): void {
-		delete_transient( self::CACHE_KEY );
+		delete_transient( self::cache_key() );
 	}
 
 	private static function current_page(): string {

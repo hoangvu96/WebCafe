@@ -33,8 +33,8 @@ $cards = array(
 
 	<div class="cafe-grid">
 		<section class="cafe-panel">
-			<?php /* translators: %d: số đơn đang xử lý */ ?>
-			<h2><?php printf( esc_html__( 'Đơn cần xử lý (%d)', 'cafe-core' ), (int) $pending_count ); ?></h2>
+			<?php /* translators: %s: số đơn đang xử lý, bọc trong span để JS cập nhật khi đánh dấu đã giao */ ?>
+			<h2><?php printf( esc_html__( 'Đơn cần xử lý (%s)', 'cafe-core' ), '<span class="cafe-pending-count">' . esc_html( number_format_i18n( $pending_count ) ) . '</span>' ); ?></h2>
 			<?php if ( ! $pending ) : ?>
 				<p><?php esc_html_e( 'Không có đơn nào đang chờ giao.', 'cafe-core' ); ?></p>
 			<?php else : ?>
