@@ -17,10 +17,11 @@ define( 'CAFE_CORE_FILE', __FILE__ );
 define( 'CAFE_CORE_DIR', plugin_dir_path( __FILE__ ) );
 
 /** Các module nghiệp vụ, mỗi module nằm trong includes/<tên>/module.php. */
-const CAFE_CORE_MODULES = array( 'checkout-vn', 'shipping', 'bean-info' );
+const CAFE_CORE_MODULES = array( 'checkout-vn', 'shipping', 'bean-info', 'admin-roles' );
 
 require_once CAFE_CORE_DIR . 'includes/class-settings.php';
 require_once CAFE_CORE_DIR . 'includes/class-settings-page.php';
+require_once CAFE_CORE_DIR . 'includes/class-capabilities.php';
 
 add_action(
 	'plugins_loaded',

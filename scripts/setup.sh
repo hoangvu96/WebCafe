@@ -15,6 +15,7 @@ if ! wp core is-installed; then
     --admin_user="$WP_ADMIN_USER" --admin_password="$WP_ADMIN_PASSWORD" \
     --admin_email="$WP_ADMIN_EMAIL" --skip-email
 fi
+wp core update-db
 
 wp language core install vi --activate
 wp plugin install woocommerce kadence-blocks kadence-starter-templates --activate
@@ -29,6 +30,11 @@ wp rewrite structure '/%postname%/'
 wp eval-file /scripts/setup/options.php
 wp eval-file /scripts/setup/pages.php
 wp eval-file /scripts/setup/shipping.php
+
+if ! wp user get "$STAFF_USER" --field=ID >/dev/null 2>&1; then
+  wp user create "$STAFF_USER" "$STAFF_USER@example.test" --role=cafe_staff \
+    --user_pass="$STAFF_PASSWORD" --display_name="Nhân viên bán hàng"
+fi
 wp rewrite flush
 
 echo "Xong: $WP_URL  (quản trị: $WP_URL/wp-admin)"
