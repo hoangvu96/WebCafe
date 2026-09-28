@@ -113,10 +113,10 @@ Robusta, Arabica, Culi, Blend, Phin giấy, Hoà tan. Khoảng 10–12 sản ph�
 - Hiển thị thành một khung trên trang chi tiết sản phẩm. Trường nào để trống thì ẩn. Nếu cả 4 trường đều trống thì ẩn luôn cả khung.
 
 ### Module `checkout-vn`: form thanh toán
-- Các trường: Họ tên, Số điện thoại, Tỉnh/Thành, Quận/Huyện, Phường/Xã, Địa chỉ cụ thể, Ghi chú.
+- Các trường: Họ tên, Số điện thoại, Tỉnh/Thành phố, Phường/Xã/Đặc khu, Địa chỉ cụ thể, Ghi chú. Địa chỉ theo mô hình hành chính **2 cấp** áp dụng từ 01/07/2025, không có Quận/Huyện.
 - Bỏ các trường: Công ty, Mã bưu điện, Quốc gia (cố định Việt Nam), Email. Email **không bắt buộc**, nếu khách nhập thì WooCommerce gửi email xác nhận đơn.
 - Số điện thoại phải khớp regex `^0\d{9}$` sau khi loại bỏ khoảng trắng và dấu chấm.
-- Tỉnh/Quận/Phường nhập dạng text bắt buộc ở giai đoạn 1. Dropdown liên kết cấp hành chính để giai đoạn sau.
+- Tỉnh/Thành phố và Phường/Xã nhập dạng text bắt buộc ở giai đoạn 1. Dropdown liên kết cấp hành chính để giai đoạn sau.
 
 ### Module `shipping`
 - Phương thức "Phí cố định" với số tiền chỉnh được, mặc định 30.000đ.
