@@ -8,12 +8,16 @@ use CafeCore\BeanInfo\BeanInfo;
 require_once __DIR__ . '/helpers.php';
 $data = require __DIR__ . '/data.php';
 
-// Xoá sản phẩm mẫu của template (SKU không bắt đầu bằng CF-).
-foreach ( wc_get_products( array( 'limit' => -1, 'status' => array( 'publish', 'draft', 'private', 'pending' ) ) ) as $existing ) {
-	if ( 0 !== strpos( (string) $existing->get_sku(), 'CF-' ) ) {
-		WP_CLI::log( 'Xoá sản phẩm của template: ' . $existing->get_name() );
-		$existing->delete( true );
+// Xoá sản phẩm mẫu của template (SKU không bắt đầu bằng CF-) — chỉ một lần, ngay sau
+// khi import mẫu Kadence, để các lần chạy sau không xoá nhầm sản phẩm do chủ shop tự thêm.
+if ( ! get_option( 'cafe_seed_template_cleaned' ) ) {
+	foreach ( wc_get_products( array( 'limit' => -1, 'status' => array( 'publish', 'draft', 'private', 'pending' ) ) ) as $existing ) {
+		if ( 0 !== strpos( (string) $existing->get_sku(), 'CF-' ) ) {
+			WP_CLI::log( 'Xoá sản phẩm của template: ' . $existing->get_name() );
+			$existing->delete( true );
+		}
 	}
+	update_option( 'cafe_seed_template_cleaned', 1, false );
 }
 
 $category_ids = array();
