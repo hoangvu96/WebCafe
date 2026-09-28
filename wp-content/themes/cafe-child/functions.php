@@ -20,3 +20,45 @@ add_action(
 	},
 	20
 );
+
+/**
+ * Việt hoá vài chuỗi hiển thị của Kadence/WooCommerce chưa có bản dịch tiếng Việt.
+ */
+add_filter(
+	'gettext',
+	static function ( string $translation, string $text, string $domain ): string {
+		static $kadence = null;
+		if ( 'kadence' !== $domain ) {
+			return $translation;
+		}
+		if ( null === $kadence ) {
+			$kadence = array(
+				'Cart Summary'    => __( 'Sản phẩm trong giỏ', 'cafe-child' ),
+				'Skip to content' => __( 'Chuyển đến nội dung', 'cafe-child' ),
+				'Shopping Cart'   => __( 'Giỏ hàng', 'cafe-child' ),
+				'Open menu'       => __( 'Mở menu', 'cafe-child' ),
+				'Close menu'      => __( 'Đóng menu', 'cafe-child' ),
+				'Grid View'       => __( 'Dạng lưới', 'cafe-child' ),
+				'List View'       => __( 'Dạng danh sách', 'cafe-child' ),
+				'Grid'            => __( 'Lưới', 'cafe-child' ),
+				'List'            => __( 'Danh sách', 'cafe-child' ),
+				'Primary'         => __( 'Menu chính', 'cafe-child' ),
+				'Primary Mobile'  => __( 'Menu chính trên điện thoại', 'cafe-child' ),
+			);
+		}
+		return isset( $kadence[ $text ] ) ? $kadence[ $text ] : $translation;
+	},
+	10,
+	3
+);
+add_filter(
+	'gettext_with_context',
+	static function ( string $translation, string $text, string $context, string $domain ): string {
+		if ( 'woocommerce' === $domain && 'shipping packages' === $context && 'Shipment' === $text ) {
+			return __( 'Vận chuyển', 'cafe-child' );
+		}
+		return $translation;
+	},
+	10,
+	4
+);

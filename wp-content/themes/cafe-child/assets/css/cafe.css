@@ -1,1 +1,125 @@
-/* Phong cách mộc mạc Việt – xem Task 16. */
+/* Phong cách mộc mạc Việt – ghi đè biến màu và font của Kadence. */
+:root {
+	--global-palette1: #4A2C1D; /* nút, liên kết chính – nâu cà phê */
+	--global-palette2: #8B5A3C; /* điểm nhấn, hover – nâu đất */
+	--global-palette3: #2E1B12; /* tiêu đề */
+	--global-palette4: #4A2C1D; /* chữ đậm */
+	--global-palette5: #6B5242; /* chữ thường */
+	--global-palette6: #9C8574; /* chữ phụ */
+	--global-palette7: #D9C3A5; /* viền, nền phụ – kraft */
+	--global-palette8: #F5EDE0; /* nền – kem */
+	--global-palette9: #FFFBF5; /* nền thẻ */
+	--global-palette-btn-bg: var(--global-palette1);
+	--global-palette-btn-bg-hover: var(--global-palette2);
+	--global-palette-btn: #FFFBF5;
+	--global-palette-btn-hover: #FFFBF5;
+	--global-body-font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+	--global-heading-font-family: 'Lora', Georgia, serif;
+	--cafe-green: #5B6B3A;
+	--cafe-radius: 4px;
+}
+
+body {
+	font-family: var(--global-body-font-family);
+	background-color: var(--global-palette8);
+	/* Vân giấy nhẹ */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.29 0 0 0 0 0.17 0 0 0 0 0.11 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4, h5, h6, .site-title, .product_title {
+	font-family: var(--global-heading-font-family);
+}
+
+.button, button, input[type="submit"], .wp-block-button__link,
+.woocommerce a.button, .woocommerce button.button {
+	border-radius: var(--cafe-radius);
+}
+
+/* Thẻ sản phẩm kiểu tem nhãn */
+.woocommerce ul.products li.product {
+	background: var(--global-palette9);
+	border: 1px dashed var(--global-palette7);
+	border-radius: var(--cafe-radius);
+	padding: 12px;
+}
+
+.woocommerce .stock.in-stock { color: var(--cafe-green); }
+
+/* Khung Thông tin hạt (markup do cafe-core in ra) */
+.cafe-bean-info {
+	margin: 24px 0;
+	padding: 16px;
+	background: var(--global-palette9);
+	border: 1px dashed var(--global-palette2);
+	border-radius: var(--cafe-radius);
+}
+.cafe-bean-info__title { margin: 0 0 8px; font-size: 1.1rem; }
+.cafe-bean-info__list { margin: 0; }
+.cafe-bean-info__row {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 6px 0;
+	border-bottom: 1px dashed var(--global-palette7);
+}
+.cafe-bean-info__row:last-child { border-bottom: 0; }
+.cafe-bean-info dt { margin: 0; font-weight: 600; }
+.cafe-bean-info dd { margin: 0; text-align: right; }
+
+.cafe-thankyou-cod {
+	margin: 16px 0;
+	padding: 16px;
+	background: var(--global-palette9);
+	border: 1px dashed var(--global-palette2);
+	border-radius: var(--cafe-radius);
+}
+
+@media (max-width: 600px) {
+	.cafe-bean-info__row { flex-direction: column; gap: 2px; }
+	.cafe-bean-info dd { text-align: left; }
+}
+
+/* ---- Bổ sung Task 16: trang chủ + header ---- */
+
+/* Icon nét mảnh ở dải "3 cam kết" */
+.cafe-commit { border-top: 1px dashed var(--global-palette7); border-bottom: 1px dashed var(--global-palette7); }
+.cafe-commit__icon { display: flex; justify-content: center; margin-bottom: 12px; color: var(--global-palette2); }
+.cafe-commit__icon .cafe-icon { width: 56px; height: 56px; }
+
+/* Ô danh mục: ảnh cùng tỉ lệ, viền nét đứt kiểu tem nhãn */
+.entry-content .cafe-cats .wp-block-image { margin: 0; }
+.cafe-cats .wp-block-image img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	border: 1px dashed var(--global-palette2);
+	border-radius: var(--cafe-radius);
+	padding: 6px;
+	background: var(--global-palette9);
+}
+.cafe-cats h3 a { color: inherit; text-decoration: none; }
+.cafe-cats h3 a:hover { color: var(--global-palette2); }
+
+/* Thẻ sản phẩm: bỏ lớp nền thứ hai của Kadence bên trong thẻ; gọn lại trên điện thoại */
+.woocommerce ul.products li.product .product-details { background: transparent; }
+@media (max-width: 600px) {
+	.woocommerce ul.products li.product { padding: 8px; }
+	.woocommerce ul.products li.product .product-details { padding: 12px 4px 4px; }
+	.woocommerce ul.products li.product .button { width: 100%; padding: 8px 6px; font-size: 15px; }
+}
+
+/* Thanh toán: ô Email (form-row-last) đứng trước cặp Tỉnh/Phường làm lệch hàng float – cho Email chiếm cả dòng;
+   trên điện thoại mọi ô đều chiếm cả dòng. */
+.woocommerce-checkout #billing_email_field { float: none; clear: both; width: 100%; }
+@media (max-width: 600px) {
+	.woocommerce-checkout .woocommerce-billing-fields .form-row { float: none; width: 100%; }
+}
+
+/* Header điện thoại: logo và nút menu cách mép màn hình bằng lề nội dung (mẫu import để lề 0) */
+@media (max-width: 1024px) {
+	#mobile-header .site-container {
+		padding-left: var(--global-content-edge-padding, 1.5rem);
+		padding-right: var(--global-content-edge-padding, 1.5rem);
+	}
+}
