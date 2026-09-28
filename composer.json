@@ -2,9 +2,6 @@
     "name": "cafe/web",
     "description": "Website bán cà phê – công cụ dev",
     "type": "project",
-    "require-dev": {
-        "phpunit/phpunit": "^10.5"
-    },
     "autoload-dev": {
         "classmap": ["wp-content/plugins/cafe-core/includes/"]
     },
