@@ -1,0 +1,381 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Cafe Core 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cafe-core\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-29T09:43:34+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: en_US\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: cafe-core\n"
+
+#. Plugin Name of the plugin
+#: cafe-core.php
+msgid "Cafe Core"
+msgstr "Cafe Core"
+
+#. Description of the plugin
+#: cafe-core.php
+msgid "Chức năng nghiệp vụ cho website bán cà phê: thông tin hạt, thanh toán Việt Nam, phí ship, trang tổng quan, phân quyền nhân viên."
+msgstr "Business features for the coffee shop website: bean info, Vietnamese checkout, shipping fee, dashboard and staff roles."
+
+#: includes/admin-roles/class-roles.php:25
+msgid "Nhân viên bán hàng"
+msgstr "Sales staff"
+
+#: includes/bean-info/class-bean-info-fields.php:18
+msgid "Nguồn gốc"
+msgstr "Origin"
+
+#: includes/bean-info/class-bean-info-fields.php:19
+msgid "Độ cao"
+msgstr "Altitude"
+
+#: includes/bean-info/class-bean-info-fields.php:20
+msgid "Mức rang"
+msgstr "Roast level"
+
+#: includes/bean-info/class-bean-info-fields.php:21
+msgid "Hương vị"
+msgstr "Flavor notes"
+
+#: includes/bean-info/class-bean-info-fields.php:27
+msgid "Nhạt"
+msgstr "Light"
+
+#: includes/bean-info/class-bean-info-fields.php:28
+msgid "Vừa"
+msgstr "Medium"
+
+#: includes/bean-info/class-bean-info-fields.php:29
+msgid "Đậm"
+msgstr "Dark"
+
+#: includes/bean-info/class-bean-info-fields.php:36
+msgid "VD: Cầu Đất, Lâm Đồng"
+msgstr "E.g. Cau Dat, Lam Dong"
+
+#: includes/bean-info/class-bean-info-fields.php:37
+msgid "VD: 1.500m"
+msgstr "E.g. 1,500m"
+
+#: includes/bean-info/class-bean-info-fields.php:42
+msgid "— Không hiển thị —"
+msgstr "— Hidden —"
+
+#: includes/bean-info/class-bean-info-fields.php:45
+msgid "VD: Cam chanh, hoa trắng"
+msgstr "E.g. Citrus, white flowers"
+
+#: includes/bean-info/class-bean-info-fields.php:77
+msgid "Thông tin hạt"
+msgstr "Bean info"
+
+#: includes/checkout-vn/class-checkout-fields.php:38
+msgid "Họ và tên"
+msgstr "Full name"
+
+#: includes/checkout-vn/class-checkout-fields.php:52
+#: includes/checkout-vn/class-checkout-fields.php:85
+#: includes/dashboard/views/dashboard.php:46
+msgid "Số điện thoại"
+msgstr "Phone number"
+
+#: includes/checkout-vn/class-checkout-fields.php:58
+msgid "Tỉnh/Thành phố"
+msgstr "Province/City"
+
+#: includes/checkout-vn/class-checkout-fields.php:61
+msgid "Phường/Xã/Đặc khu"
+msgstr "Ward/Commune/Special zone"
+
+#: includes/checkout-vn/class-checkout-fields.php:69
+msgid "Địa chỉ cụ thể"
+msgstr "Street address"
+
+#: includes/checkout-vn/class-checkout-fields.php:70
+msgid "Số nhà, tên đường, thôn/xóm"
+msgstr "House number, street, hamlet"
+
+#: includes/checkout-vn/class-checkout-fields.php:91
+msgid "Email (để nhận xác nhận đơn)"
+msgstr "Email (for order confirmation)"
+
+#: includes/checkout-vn/class-checkout-fields.php:153
+msgid "Số điện thoại không hợp lệ. Vui lòng nhập 10 số, bắt đầu bằng 0."
+msgstr "Invalid phone number. Please enter 10 digits starting with 0."
+
+#. translators: %s: tổng tiền đơn hàng
+#: includes/checkout-vn/class-checkout-fields.php:173
+#, php-format
+msgid "Vui lòng chuẩn bị %s khi nhận hàng."
+msgstr "Please have %s ready on delivery."
+
+#. translators: %s: số điện thoại cửa hàng
+#: includes/checkout-vn/class-checkout-fields.php:182
+#, php-format
+msgid "Cần hỗ trợ? Gọi %s"
+msgstr "Need help? Call %s"
+
+#: includes/class-settings-page.php:35
+#: includes/class-settings-page.php:48
+msgid "Cài đặt cửa hàng cà phê"
+msgstr "Coffee shop settings"
+
+#: includes/class-settings-page.php:36
+msgid "Cài đặt Cafe"
+msgstr "Cafe settings"
+
+#: includes/class-settings-page.php:54
+msgid "Phí ship cố định (đ)"
+msgstr "Flat shipping fee (₫)"
+
+#: includes/class-settings-page.php:58
+msgid "Miễn phí ship cho đơn từ (đ)"
+msgstr "Free shipping for orders from (₫)"
+
+#: includes/class-settings-page.php:61
+msgid "Tính trên tổng tiền hàng, chưa gồm phí ship. Đặt 0 để tắt miễn phí ship."
+msgstr "Based on the items subtotal, excluding shipping. Set 0 to disable free shipping."
+
+#: includes/class-settings-page.php:65
+msgid "Số điện thoại hỗ trợ"
+msgstr "Support phone number"
+
+#: includes/dashboard/class-dashboard-page.php:29
+#: includes/dashboard/views/dashboard.php:18
+msgid "Tổng quan cửa hàng"
+msgstr "Store overview"
+
+#: includes/dashboard/class-dashboard-page.php:30
+#: includes/dashboard/class-dashboard-page.php:31
+msgid "Tổng quan"
+msgstr "Overview"
+
+#: includes/dashboard/class-dashboard-page.php:32
+#: includes/dashboard/views/inventory.php:9
+#: includes/dashboard/views/inventory.php:18
+msgid "Tồn kho"
+msgstr "Inventory"
+
+#: includes/dashboard/class-dashboard-page.php:94
+msgid "Doanh thu"
+msgstr "Revenue"
+
+#: includes/dashboard/class-dashboard-page.php:95
+msgid "Không cập nhật được đơn hàng. Vui lòng tải lại trang và thử lại."
+msgstr "Could not update the order. Please reload the page and try again."
+
+#: includes/dashboard/class-dashboard-page.php:103
+msgid "Phiên làm việc đã hết hạn. Vui lòng tải lại trang."
+msgstr "Your session has expired. Please reload the page."
+
+#: includes/dashboard/class-dashboard-page.php:106
+msgid "Bạn không có quyền cập nhật đơn hàng."
+msgstr "You are not allowed to update orders."
+
+#: includes/dashboard/class-dashboard-page.php:111
+msgid "Đơn hàng không tồn tại hoặc không còn ở trạng thái Đang xử lý."
+msgstr "The order does not exist or is no longer Processing."
+
+#: includes/dashboard/class-dashboard-page.php:114
+msgid "Nhân viên đánh dấu đã giao từ trang Tổng quan."
+msgstr "Marked as delivered by staff from the Overview page."
+
+#: includes/dashboard/views/dashboard.php:11
+msgid "Doanh thu hôm nay"
+msgstr "Revenue today"
+
+#: includes/dashboard/views/dashboard.php:12
+msgid "Doanh thu 7 ngày"
+msgstr "Revenue (7 days)"
+
+#: includes/dashboard/views/dashboard.php:13
+msgid "Doanh thu tháng này"
+msgstr "Revenue this month"
+
+#: includes/dashboard/views/dashboard.php:14
+msgid "Đơn mới hôm nay"
+msgstr "New orders today"
+
+#: includes/dashboard/views/dashboard.php:30
+msgid "Doanh thu 30 ngày"
+msgstr "Revenue (30 days)"
+
+#: includes/dashboard/views/dashboard.php:31
+msgid "Biểu đồ doanh thu 30 ngày"
+msgstr "30-day revenue chart"
+
+#. translators: %s: số đơn đang xử lý, bọc trong span để JS cập nhật khi đánh dấu đã giao
+#: includes/dashboard/views/dashboard.php:37
+#, php-format
+msgid "Đơn cần xử lý (%s)"
+msgstr "Orders to process (%s)"
+
+#: includes/dashboard/views/dashboard.php:39
+msgid "Không có đơn nào đang chờ giao."
+msgstr "No orders waiting for delivery."
+
+#: includes/dashboard/views/dashboard.php:44
+msgid "Đơn"
+msgstr "Order"
+
+#: includes/dashboard/views/dashboard.php:45
+msgid "Khách"
+msgstr "Customer"
+
+#: includes/dashboard/views/dashboard.php:47
+msgid "Tổng tiền"
+msgstr "Total"
+
+#: includes/dashboard/views/dashboard.php:48
+msgid "Đặt lúc"
+msgstr "Placed at"
+
+#: includes/dashboard/views/dashboard.php:49
+msgid "Thao tác"
+msgstr "Actions"
+
+#: includes/dashboard/views/dashboard.php:60
+msgid "Đã giao"
+msgstr "Delivered"
+
+#: includes/dashboard/views/dashboard.php:66
+msgid "Xem tất cả đơn đang xử lý"
+msgstr "View all processing orders"
+
+#: includes/dashboard/views/dashboard.php:72
+msgid "Sắp hết hàng"
+msgstr "Low stock"
+
+#: includes/dashboard/views/dashboard.php:74
+msgid "Tồn kho đều ổn."
+msgstr "Stock levels are fine."
+
+#: includes/dashboard/views/dashboard.php:88
+msgid "Bán chạy 30 ngày"
+msgstr "Best sellers (30 days)"
+
+#: includes/dashboard/views/dashboard.php:90
+msgid "Chưa có dữ liệu."
+msgstr "No data yet."
+
+#. translators: %s: số lượng đã bán
+#: includes/dashboard/views/dashboard.php:97
+#, php-format
+msgid "%s đã bán"
+msgstr "%s sold"
+
+#: includes/dashboard/views/inventory.php:10
+msgid "Chỉ xem. Việc sửa sản phẩm và giá do Quản lý cửa hàng thực hiện."
+msgstr "View only. Products and prices are edited by the Shop manager."
+
+#: includes/dashboard/views/inventory.php:14
+msgid "Sản phẩm"
+msgstr "Product"
+
+#: includes/dashboard/views/inventory.php:15
+msgid "Khối lượng"
+msgstr "Weight"
+
+#: includes/dashboard/views/inventory.php:16
+msgid "Dạng xay"
+msgstr "Grind"
+
+#: includes/dashboard/views/inventory.php:17
+msgid "Giá"
+msgstr "Price"
+
+#. translators: %s: tên ngôn ngữ đang dùng
+#: includes/language/class-switcher.php:40
+#, php-format
+msgid "Chọn ngôn ngữ (đang dùng: %s)"
+msgstr "Choose language (current: %s)"
+
+#: includes/shipping/class-shipping-method.php:17
+msgid "Phí ship cố định (Cafe)"
+msgstr "Flat shipping fee (Cafe)"
+
+#: includes/shipping/class-shipping-method.php:18
+msgid "Phí cố định, miễn phí khi đơn đạt ngưỡng. Cấu hình tại WooCommerce → Cài đặt Cafe."
+msgstr "Flat fee, free once the order reaches the threshold. Configure in WooCommerce → Cafe settings."
+
+#: includes/shipping/class-shipping-method.php:21
+msgid "Giao hàng tận nơi"
+msgstr "Home delivery"
+
+#: includes/shipping/class-shipping-method.php:38
+msgid "Miễn phí vận chuyển"
+msgstr "Free shipping"
+
+#: includes/shipping/class-shipping-method.php:38
+msgid "Phí vận chuyển"
+msgstr "Shipping fee"
+
+#: includes/language/class-content-admin.php:33
+msgid "Bản tiếng Anh"
+msgstr "English version"
+
+#. translators: %s: link tới trang tiếng Việt gốc
+#: includes/language/class-content-admin.php:43
+#, php-format
+msgid "Đây là bản tiếng Anh của trang %s. Để trạng thái Riêng tư: trang này chỉ hiển thị thay cho trang gốc khi khách chọn English."
+msgstr "This is the English version of %s. Keep it Private: it is only shown in place of the original page when visitors choose English."
+
+#: includes/language/class-content-admin.php:55
+msgid "Sửa bản tiếng Anh"
+msgstr "Edit English version"
+
+#: includes/language/class-content-admin.php:56
+msgid "Bản tiếng Anh ở trạng thái Bản nháp sẽ chưa được hiển thị."
+msgstr "An English version in Draft status is not shown yet."
+
+#: includes/language/class-content-admin.php:62
+msgid "Lưu trang trước khi tạo bản tiếng Anh."
+msgstr "Save the page before creating an English version."
+
+#: includes/language/class-content-admin.php:68
+msgid "Tạo bản tiếng Anh"
+msgstr "Create English version"
+
+#: includes/language/class-content-admin.php:69
+msgid "Tạo bản sao nội dung trang này để dịch sang tiếng Anh."
+msgstr "Copies this page's content so you can translate it into English."
+
+#: includes/language/class-content-admin.php:77
+msgid "Bạn không có quyền sửa trang này."
+msgstr "You are not allowed to edit this page."
+
+#: includes/language/class-content-admin.php:81
+msgid "Không tạo được bản tiếng Anh."
+msgstr "Could not create the English version."
+
+#: includes/language/class-content-admin.php:136
+#: includes/language/class-content-admin.php:146
+msgid "Tên tiếng Anh"
+msgstr "English name"
+
+#: includes/language/class-content-admin.php:138
+#: includes/language/class-content-admin.php:149
+msgid "Hiển thị khi khách chọn English. Để trống thì dùng tên tiếng Việt."
+msgstr "Shown when visitors choose English. Leave empty to use the Vietnamese name."
+
+#: includes/language/class-content-admin.php:170
+msgid "Nhãn tiếng Anh"
+msgstr "English label"
+
+#: includes/language/class-content-admin.php:202
+msgid "Bản dịch tiếng Anh"
+msgstr "English translations"
+
+#: includes/language/class-content-admin.php:203
+msgid "Cụm từ trong khẩu hiệu, footer, widget, phương thức thanh toán, câu chính sách ở trang thanh toán và tên thuộc tính sản phẩm. Mỗi dòng: Tiếng Việt = English. Dòng bắt đầu bằng # là ghi chú."
+msgstr "Phrases in the tagline, footer, widgets, payment method, checkout privacy text and product attribute names. One per line: Vietnamese = English. Lines starting with # are comments."
+
+#: includes/language/class-content-admin.php:204
+msgid "Trang, danh mục và menu được dịch ngay trong màn hình sửa của chúng."
+msgstr "Pages, categories and menus are translated on their own edit screens."

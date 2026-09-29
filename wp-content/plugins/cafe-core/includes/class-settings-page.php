@@ -66,7 +66,11 @@ final class SettingsPage {
 						<td><input id="cafe-shop-phone" type="text" class="regular-text" name="<?php echo esc_attr( $name ); ?>[shop_phone]" value="<?php echo esc_attr( $settings['shop_phone'] ); ?>"></td>
 					</tr>
 				</table>
-				<?php submit_button(); ?>
+				<?php
+				/** Cho các module thêm phần cài đặt vào cùng form (vd. bảng cụm từ tiếng Anh). */
+				do_action( 'cafe_core_settings_after_fields' );
+				submit_button();
+				?>
 			</form>
 		</div>
 		<?php

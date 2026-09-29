@@ -22,6 +22,8 @@ const CAFE_CORE_MODULES = array( 'checkout-vn', 'shipping', 'bean-info', 'admin-
 require_once CAFE_CORE_DIR . 'includes/class-settings.php';
 require_once CAFE_CORE_DIR . 'includes/class-settings-page.php';
 require_once CAFE_CORE_DIR . 'includes/class-capabilities.php';
+// Nạp ngay (không đợi plugins_loaded) để chọn locale trước khi các file dịch được nạp.
+require_once CAFE_CORE_DIR . 'includes/language/module.php';
 
 add_action(
 	'before_woocommerce_init',

@@ -177,8 +177,8 @@ final class CheckoutFields {
 		if ( '' !== $phone ) {
 			printf(
 				'<p>%s</p>',
-				/* translators: %s: số điện thoại cửa hàng */
 				sprintf(
+					/* translators: %s: số điện thoại cửa hàng */
 					esc_html__( 'Cần hỗ trợ? Gọi %s', 'cafe-core' ),
 					'<a href="' . esc_url( 'tel:' . PhoneValidator::normalize( $phone ) ) . '">' . esc_html( $phone ) . '</a>'
 				)

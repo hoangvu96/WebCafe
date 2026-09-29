@@ -48,6 +48,10 @@ ensure_user() { # login password role email display_name
 ensure_user "$WP_ADMIN_USER" "$WP_ADMIN_PASSWORD" administrator "$WP_ADMIN_EMAIL" "$WP_ADMIN_USER"
 ensure_user "$STAFF_USER" "$STAFF_PASSWORD" cafe_staff "$STAFF_USER@example.test" "Nhân viên bán hàng"
 
+# Snapshot cũ có thể chưa có nút chọn ngôn ngữ và bản tiếng Anh (chỉ điền phần còn thiếu).
+wp eval-file /scripts/setup/language-switcher.php
+wp eval-file /scripts/setup/translations-en.php
+
 wp rewrite flush
 wp cache flush
 echo "Đã khôi phục: $WP_URL"

@@ -76,11 +76,12 @@ add_filter(
 /**
  * Việt hoá nút sản phẩm WooCommerce — "Select options" → "Chọn".
  * WooCommerce dùng chuỗi này cho sản phẩm có biến thể (variable product).
+ * Chỉ áp dụng khi giao diện đang là tiếng Việt.
  */
 add_filter(
 	'gettext',
 	static function ( string $translation, string $text, string $domain ): string {
-		if ( 'woocommerce' !== $domain ) {
+		if ( 'woocommerce' !== $domain || ! cafe_child_is_vi_locale() ) {
 			return $translation;
 		}
 		$map = array(
@@ -279,10 +280,16 @@ add_action(
 			array( 'strategy' => 'defer', 'in_footer' => true )
 		);
 		wp_localize_script( 'cafe-search', 'cafeSearch', array(
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'nonce'   => wp_create_nonce( 'cafe_search_nonce' ),
-			'more'    => __( 'Xem thêm %d sản phẩm', 'cafe-child' ),
-			'label'   => __( 'TÌM KIẾM', 'cafe-child' ),
+			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+			'nonce'       => wp_create_nonce( 'cafe_search_nonce' ),
+			/* translators: %d: tổng số sản phẩm tìm thấy */
+			'more'        => __( 'Xem thêm %d sản phẩm', 'cafe-child' ),
+			'label'       => __( 'TÌM KIẾM', 'cafe-child' ),
+			'placeholder' => esc_attr__( 'Nhập từ khóa...', 'cafe-child' ),
+			'submit'      => esc_attr__( 'Tìm kiếm', 'cafe-child' ),
+			'loading'     => esc_html__( 'Đang tìm kiếm…', 'cafe-child' ),
+			'error'       => esc_html__( 'Không tìm thấy kết quả.', 'cafe-child' ),
+			'empty'       => esc_html__( 'Không tìm thấy sản phẩm nào.', 'cafe-child' ),
 		) );
 	},
 	25
