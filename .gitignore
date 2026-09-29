@@ -7,5 +7,3 @@
 /tests/e2e/playwright-report/
 .phpunit.result.cache
 snapshot/pre-*.sql
-snapshot/db.sql
-snapshot/uploads.tar.gz
