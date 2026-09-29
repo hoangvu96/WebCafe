@@ -28,14 +28,15 @@ final class AdminCleanup {
 		'woocommerce-marketing',     // Tiếp thị WooCommerce
 		'kadence-blocks',            // Kadence Blocks
 		'kadence-starter',           // Site Assist (Kadence Starter Templates)
+		'options-general.php',       // Cài đặt WP
+		'themes.php',                // Giao diện
+		'wc-admin',                  // Phân tích WooCommerce (Analytics)
 	);
 
 	/** Menu ẩn thêm với nhân viên (cafe_staff) — ngoài ALWAYS_HIDDEN. */
 	private const STAFF_HIDDEN = array(
 		'edit.php?post_type=product',   // Sản phẩm
-		'themes.php',                   // Giao diện
 		'users.php',                    // Người dùng
-		'options-general.php',          // Cài đặt WP
 		'wc-admin&path=/extensions',    // Extensions WC
 		'kadence',                      // Kadence (menu chính nếu có)
 		'kadence-starter-templates',    // Kadence Templates
