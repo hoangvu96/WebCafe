@@ -1,0 +1,4 @@
+cafe-core,0.1.0
+kadence-blocks,3.7.11.1
+kadence-starter-templates,2.3.4
+woocommerce,11.1.2
