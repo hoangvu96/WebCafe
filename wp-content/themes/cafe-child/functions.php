@@ -6,7 +6,7 @@ add_action(
 	static function (): void {
 		wp_enqueue_style(
 			'cafe-child-fonts',
-			'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Lora:wght@500;600;700&display=swap',
+			'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500&display=swap',
 			array(),
 			null
 		);
@@ -16,6 +16,13 @@ add_action(
 			get_stylesheet_directory_uri() . '/assets/css/cafe.css',
 			array( 'cafe-child-fonts' ),
 			wp_get_theme()->get( 'Version' )
+		);
+		wp_enqueue_script(
+			'cafe-motion',
+			get_stylesheet_directory_uri() . '/assets/js/cafe-motion.js',
+			array(),
+			wp_get_theme()->get( 'Version' ),
+			array( 'strategy' => 'defer', 'in_footer' => true )
 		);
 	},
 	20

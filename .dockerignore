@@ -1,0 +1,23 @@
+.git
+.env
+.env.*
+.playwright-mcp/
+
+# Ảnh chụp màn hình
+homepage-*.png
+
+# Tài liệu & test
+docs/
+tests/
+tools/
+phpunit.xml
+*.md
+
+# SQL cũ (chỉ cần snapshot/db.sql)
+snapshot/pre-*.sql
+
+# Vendor PHP (không dùng trong container)
+vendor/
+
+# Docker-compose chỉ dùng local
+docker-compose.yml

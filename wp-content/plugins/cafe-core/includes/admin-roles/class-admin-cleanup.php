@@ -23,12 +23,11 @@ final class AdminCleanup {
 		'tools.php',                 // Công cụ WP
 		'index.php',                 // Trang quản trị WP (thay bằng Cafe Dashboard)
 		'upload.php',                // Thư viện media
-		'edit.php?post_type=page',   // Trang
 		'plugins.php',               // Plugin
 		'woocommerce-marketing',     // Tiếp thị WooCommerce
 		'kadence-blocks',            // Kadence Blocks
 		'kadence-starter',           // Site Assist (Kadence Starter Templates)
-		'options-general.php',       // Cài đặt WP
+		// 'options-general.php',       // Cài đặt WP
 		'themes.php',                // Giao diện
 		'wc-admin&path=/analytics/overview',                          // Phân tích WooCommerce (Analytics)
 		'admin.php?page=wc-settings&tab=checkout&from=PAYMENTS_MENU_ITEM', // Thanh toán
