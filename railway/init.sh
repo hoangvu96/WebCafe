@@ -46,11 +46,13 @@ ensure_plugins() {
 # ─── Helper: khôi phục uploads nếu thư mục rỗng (container restart) ────────
 ensure_uploads() {
     local uploads_dir="/var/www/html/wp-content/uploads"
-    # Kiểm tra có file/thư mục nào không (ngoài thư mục .htaccess hoặc rỗng hẳn)
+    # Kiểm tra có file/thư mục nào không (rỗng = container mới)
     if [ ! -d "$uploads_dir" ] || [ -z "$(ls -A "$uploads_dir" 2>/dev/null)" ]; then
         echo "$LOG Khôi phục uploads từ snapshot..."
         tar -C /var/www/html/wp-content -xzf /railway/uploads.tar.gz
         chown -R www-data:www-data "$uploads_dir"
+        echo "$LOG Tạo lại thumbnail ảnh sản phẩm..."
+        $WP media regenerate --all --yes --quiet 2>/dev/null || true
         echo "$LOG Uploads đã khôi phục."
     fi
 }
