@@ -59,6 +59,36 @@ ensure_uploads() {
 if [ -n "$CURRENT_URL" ]; then
     echo "$LOG Đã khởi tạo tại: $CURRENT_URL"
 
+    # ── Force re-import DB từ snapshot (chỉ khi FORCE_DB_REIMPORT=1) ──────────
+    if [ "${FORCE_DB_REIMPORT:-0}" = "1" ]; then
+        echo "$LOG FORCE_DB_REIMPORT=1 — Import lại database từ snapshot..."
+        mysql $MYSQL_OPTS "${MYSQL_DATABASE}" < /railway/db.sql
+        echo "$LOG Database re-imported."
+
+        # Cập nhật URL sau khi import (snapshot có thể chứa URL local/cũ)
+        NEW_URL="${WP_URL:-$CURRENT_URL}"
+        OLD_SNAP_URL=$($WP option get siteurl 2>/dev/null || echo "")
+        if [ -n "$OLD_SNAP_URL" ] && [ "$OLD_SNAP_URL" != "$NEW_URL" ]; then
+            echo "$LOG Cập nhật URL: $OLD_SNAP_URL → $NEW_URL"
+            $WP search-replace "$OLD_SNAP_URL" "$NEW_URL" \
+                --all-tables --skip-columns=guid --quiet
+        fi
+
+        # Đặt lại mật khẩu từ env sau khi import (snapshot không có hash)
+        if [ -n "${WP_ADMIN_PASSWORD:-}" ]; then
+            $WP user update "${WP_ADMIN_USER:-admin}" \
+                --user_pass="${WP_ADMIN_PASSWORD}" --skip-email --quiet
+        fi
+        if [ -n "${STAFF_PASSWORD:-}" ]; then
+            $WP user update "${STAFF_USER:-nhanvien}" \
+                --user_pass="${STAFF_PASSWORD}" --skip-email --quiet 2>/dev/null || true
+        fi
+
+        $WP rewrite flush --quiet
+        $WP cache flush --quiet
+        echo "$LOG ✓ Database đã đồng bộ. Hãy xoá FORCE_DB_REIMPORT khỏi Railway env."
+    fi
+
     # Đảm bảo parent theme kadence được cài và cafe-child active
     if ! $WP theme is-installed kadence 2>/dev/null; then
         echo "$LOG Cài parent theme kadence..."
@@ -77,6 +107,7 @@ if [ -n "$CURRENT_URL" ]; then
 
     # Cập nhật URL nếu domain thay đổi (re-deploy sang domain mới)
     TARGET_URL="${WP_URL:-$CURRENT_URL}"
+    CURRENT_URL=$($WP option get siteurl 2>/dev/null || echo "$CURRENT_URL")
     if [ "$CURRENT_URL" != "$TARGET_URL" ]; then
         echo "$LOG Cập nhật URL: $CURRENT_URL → $TARGET_URL"
         $WP search-replace "$CURRENT_URL" "$TARGET_URL" \
