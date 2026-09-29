@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Quyền truy cập thật vẫn do capability quyết định; class này chỉ ẩn menu
  * để giao diện gọn hơn — không phải rào bảo mật.
  *
- * Admin    : ẩn Posts, Comments, Tools và một số menu Kadence/plugin ít dùng.
+ * Admin    : ẩn Posts, Comments, Tools, Media và một số menu Kadence/plugin ít dùng.
  * cafe_staff: chỉ giữ Cafe Dashboard và Đơn hàng WooCommerce; ẩn hết còn lại.
  */
 final class AdminCleanup {
@@ -19,7 +19,6 @@ final class AdminCleanup {
 	/** Menu ẩn với MỌI người kể cả admin (hoàn toàn không dùng cho site này). */
 	private const ALWAYS_HIDDEN = array(
 		'edit.php',                  // Bài viết (blog)
-		'edit.php?post_type=page',   // Trang (Pages)
 		'edit-comments.php',         // Bình luận
 		'tools.php',                 // Công cụ WP
 		'index.php',                 // Trang quản trị WP (thay bằng Cafe Dashboard)
