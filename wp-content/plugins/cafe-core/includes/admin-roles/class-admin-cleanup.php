@@ -18,24 +18,25 @@ final class AdminCleanup {
 
 	/** Menu ẩn với MỌI người kể cả admin (hoàn toàn không dùng cho site này). */
 	private const ALWAYS_HIDDEN = array(
-		'edit.php',          // Bài viết (blog)
-		'edit-comments.php', // Bình luận
-		'tools.php',         // Công cụ WP
+		'edit.php',                  // Bài viết (blog)
+		'edit-comments.php',         // Bình luận
+		'tools.php',                 // Công cụ WP
+		'index.php',                 // Trang quản trị WP (thay bằng Cafe Dashboard)
+		'upload.php',                // Thư viện media
+		'edit.php?post_type=page',   // Trang
+		'plugins.php',               // Plugin
+		'woocommerce-marketing',     // Tiếp thị WooCommerce
+		'kadence-blocks',            // Kadence Blocks
+		'kadence-starter',           // Site Assist (Kadence Starter Templates)
 	);
 
-	/** Menu ẩn thêm với nhân viên (cafe_staff). */
+	/** Menu ẩn thêm với nhân viên (cafe_staff) — ngoài ALWAYS_HIDDEN. */
 	private const STAFF_HIDDEN = array(
-		'index.php',                    // Dashboard WP (thay bằng Cafe Dashboard)
-		'upload.php',                   // Thư viện media
-		'edit.php?post_type=page',      // Trang
 		'edit.php?post_type=product',   // Sản phẩm
 		'themes.php',                   // Giao diện
-		'plugins.php',                  // Plugin
 		'users.php',                    // Người dùng
 		'options-general.php',          // Cài đặt WP
-		'woocommerce-marketing',        // Marketing WC
 		'wc-admin&path=/extensions',    // Extensions WC
-		'kadence-blocks',               // Kadence Blocks
 		'kadence',                      // Kadence (menu chính nếu có)
 		'kadence-starter-templates',    // Kadence Templates
 	);
@@ -121,14 +122,10 @@ final class AdminCleanup {
 	}
 
 	// -------------------------------------------------------------------------
-	// Chuyển hướng nhân viên về Cafe Dashboard khi vào /wp-admin/
+	// Chuyển hướng về Cafe Dashboard khi vào /wp-admin/ (index.php đã bị ẩn)
 	// -------------------------------------------------------------------------
 
 	public static function redirect_dashboard(): void {
-		if ( ! self::is_staff() ) {
-			return;
-		}
-
 		global $pagenow;
 		if ( 'index.php' === $pagenow && ! isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			wp_safe_redirect( admin_url( 'admin.php?page=cafe-dashboard' ) );
