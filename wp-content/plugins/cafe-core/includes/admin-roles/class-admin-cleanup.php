@@ -30,7 +30,8 @@ final class AdminCleanup {
 		'kadence-starter',           // Site Assist (Kadence Starter Templates)
 		'options-general.php',       // Cài đặt WP
 		'themes.php',                // Giao diện
-		'wc-admin&path=/analytics/overview', // Phân tích WooCommerce (Analytics)
+		'wc-admin&path=/analytics/overview',                          // Phân tích WooCommerce (Analytics)
+		'admin.php?page=wc-settings&tab=checkout&from=PAYMENTS_MENU_ITEM', // Thanh toán
 	);
 
 	/** Menu ẩn thêm với nhân viên (cafe_staff) — ngoài ALWAYS_HIDDEN. */
