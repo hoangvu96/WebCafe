@@ -22,6 +22,9 @@ COPY snapshot/db.sql          /railway/db.sql
 COPY snapshot/uploads.tar.gz  /railway/uploads.tar.gz
 COPY snapshot/plugins.txt     /railway/plugins.txt
 
+# PHP config: tăng memory và upload limit
+COPY railway/php.ini /usr/local/etc/php/conf.d/cafe-custom.ini
+
 # Copy Railway scripts
 COPY railway/entrypoint.sh /railway/entrypoint.sh
 COPY railway/init.sh       /railway/init.sh
