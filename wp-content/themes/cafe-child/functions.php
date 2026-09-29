@@ -92,13 +92,11 @@ add_filter(
  */
 ( static function (): void {
 	$render = static function (): void {
-		$id = (int) get_theme_mod( 'custom_logo' );
-		if ( ! $id ) {
-			return;
-		}
-		$url = wp_get_attachment_url( $id );
+		$id  = (int) get_theme_mod( 'custom_logo' );
+		$url = $id ? wp_get_attachment_url( $id ) : '';
+		// Fallback: dùng SVG trong theme nếu chưa set custom logo trong DB.
 		if ( ! $url ) {
-			return;
+			$url = get_stylesheet_directory_uri() . '/assets/images/logo.svg';
 		}
 		echo '<img src="' . esc_url( $url ) . '" class="custom-logo svg-logo-image" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" />';
 		add_filter( 'kadence_custom_logo', '__return_empty_string' );
