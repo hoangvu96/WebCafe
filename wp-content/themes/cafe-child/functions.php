@@ -112,22 +112,49 @@ add_filter(
 
 /**
  * Inject logo image vào header desktop và mobile của Kadence.
- * Kadence dùng 2 action khác nhau cho desktop và mobile.
+ *
+ * Khi custom_logo được set trong DB: hook before_kadence_logo_output inject img và
+ * suppress logo Kadence.
+ * Khi custom_logo chưa set (ví dụ Railway DB mới): thêm class "cafe-logo-fallback"
+ * vào body để CSS hiển thị SVG qua ::before pseudo-element.
  */
 ( static function (): void {
-	$render = static function (): void {
+	$svg_url = static function (): string {
 		$id  = (int) get_theme_mod( 'custom_logo' );
 		$url = $id ? wp_get_attachment_url( $id ) : '';
-		// Fallback: dùng SVG trong theme nếu chưa set custom logo trong DB.
-		if ( ! $url ) {
-			$url = get_stylesheet_directory_uri() . '/assets/images/logo.svg';
-		}
-		echo '<img src="' . esc_url( $url ) . '" class="custom-logo svg-logo-image" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" />';
+		return $url ?: get_stylesheet_directory_uri() . '/assets/images/logo.svg';
+	};
+
+	// Khi custom_logo đã set trong DB — inject img trước logo Kadence.
+	$render = static function () use ( $svg_url ): void {
+		echo '<img src="' . esc_url( $svg_url() ) . '" class="custom-logo svg-logo-image" alt="' . esc_attr( get_bloginfo( 'name' ) ) . '" />';
 		add_filter( 'kadence_custom_logo', '__return_empty_string' );
 		add_filter( 'kadence_mobile_custom_logo', '__return_empty_string' );
 	};
 	add_action( 'before_kadence_logo_output', $render );
 	add_action( 'before_kadence_mobile_logo_output', $render );
+
+	// Khi custom_logo CHƯA set — Kadence render site-title text thay vì logo,
+	// nên before_kadence_logo_output không fire. Dùng body_class + CSS fallback.
+	add_filter(
+		'body_class',
+		static function ( array $classes ) use ( $svg_url ): array {
+			$id  = (int) get_theme_mod( 'custom_logo' );
+			$url = $id ? wp_get_attachment_url( $id ) : '';
+			if ( ! $url ) {
+				$classes[] = 'cafe-logo-fallback';
+				// Inject SVG URL vào CSS custom property để dùng trong ::before.
+				add_action(
+					'wp_head',
+					static function () use ( $svg_url ): void {
+						echo '<style>:root{--cafe-logo-url:url("' . esc_url( $svg_url() ) . '")}</style>' . "\n";
+					},
+					1
+				);
+			}
+			return $classes;
+		}
+	);
 } )();
 
 /**

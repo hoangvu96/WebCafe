@@ -47,6 +47,34 @@ h1, h2, h3, h4, h5, h6, .site-title, .product_title {
 	max-width: 240px !important;
 }
 
+/* Fallback: khi DB Railway chưa có custom_logo, Kadence render site-title text.
+   Body class "cafe-logo-fallback" được thêm bởi functions.php để ẩn text và
+   hiển thị SVG logo qua CSS ::before. */
+.cafe-logo-fallback .brand a[rel="home"] {
+	display: inline-flex;
+	align-items: center;
+	min-width: 200px;
+	height: 52px;
+}
+.cafe-logo-fallback .brand a[rel="home"] .site-title-wrap {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+.cafe-logo-fallback .brand a[rel="home"]::before {
+	content: var(--cafe-logo-url, '');
+	display: block;
+	width: 220px;
+	height: 52px;
+	background: var(--cafe-logo-url) no-repeat left center;
+	background-size: contain;
+	/* content trick không hoạt động với URL trực tiếp — dùng background-image */
+	content: '';
+}
+
 /* === HEADER ICONS: search, account, language === */
 .cafe-header-icons {
 	display: inline-flex;
