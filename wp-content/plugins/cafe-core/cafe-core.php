@@ -48,5 +48,17 @@ add_action(
 		foreach ( CAFE_CORE_MODULES as $module ) {
 			require_once CAFE_CORE_DIR . "includes/{$module}/module.php";
 		}
+
+		// Đồng bộ ngay vào bảng wc_order_stats khi đơn hàng được tạo/cập nhật trạng thái.
+		// WooCommerce thường làm điều này qua Action Scheduler nhưng hay bị trễ trong môi trường dev.
+		$sync_order = static function ( int $order_id ): void {
+			if ( ! class_exists( \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::class ) ) {
+				return;
+			}
+			\Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::sync_order( $order_id );
+		};
+		add_action( 'woocommerce_new_order', $sync_order );
+		add_action( 'woocommerce_order_status_changed', $sync_order );
+		add_action( 'woocommerce_update_order', $sync_order );
 	}
 );
