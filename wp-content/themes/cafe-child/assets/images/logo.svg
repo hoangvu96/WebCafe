@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 56" fill="none">
+  <!-- Coffee leaf mark -->
+  <path d="M22 3C22 3 4 14 4 29C4 41 12 49 22 49C32 49 40 41 40 29C40 14 22 3 22 3Z" fill="#2B5F54"/>
+  <line x1="22" y1="49" x2="22" y2="21" stroke="white" stroke-width="1.6" stroke-opacity="0.55" stroke-linecap="round"/>
+  <path d="M22 37C17 33 11 32 11 32" stroke="white" stroke-width="1.2" stroke-opacity="0.45" fill="none" stroke-linecap="round"/>
+  <path d="M22 28C27 24 32 24 32 24" stroke="white" stroke-width="1.2" stroke-opacity="0.45" fill="none" stroke-linecap="round"/>
+
+  <!-- Vertical rule -->
+  <line x1="54" y1="12" x2="54" y2="44" stroke="#D8D5CE" stroke-width="1"/>
+
+  <!-- Brand name -->
+  <text x="66" y="31"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="18"
+        font-weight="bold"
+        fill="#18100C"
+        letter-spacing="-0.4">Arabica Long H&#7865;</text>
+
+  <!-- Tagline -->
+  <text x="67" y="43"
+        font-family="Arial,Helvetica,sans-serif"
+        font-size="8.5"
+        font-weight="400"
+        fill="#999999"
+        letter-spacing="2.2">C&#192; PH&#202; RANG XAY</text>
+</svg>
