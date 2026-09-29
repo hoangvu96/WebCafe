@@ -563,9 +563,9 @@ main#primary,
 /* Category section heading */
 .cafe-cats h2,
 .cafe-best h2 {
-	font-size: clamp(28px, 3.5vw, 44px) !important;
-	letter-spacing: -0.02em !important;
-	line-height: 1.15 !important;
+	font-size: clamp(22px, 2.8vw, 36px) !important;
+	letter-spacing: 0.10em !important;
+	line-height: 1.2 !important;
 }
 
 /* ---- Redesign upgrades ---- */
@@ -713,11 +713,14 @@ p { text-wrap: pretty; line-height: 1.75; }
 	letter-spacing: -0.045em !important;
 }
 
-/* === COMMIT SECTION: Dark band — đối lập mạnh với phần sáng === */
+/* === COMMIT SECTION: Men ngọc Bát Tràng — celadon đậm + hoa văn trắng === */
 .cafe-commit {
-	background-color: var(--cafe-dark) !important;
-	border-top: none;
-	border-bottom: none;
+	background-color: #1E4D41 !important;
+	/* Hoa văn thổ cẩm — kim cương lồng nhau, màu trắng mờ */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M36 4 L68 36 L36 68 L4 36 Z' stroke='%23ffffff' stroke-width='0.8' fill='none' opacity='0.08'/%3E%3Cpath d='M36 18 L54 36 L36 54 L18 36 Z' stroke='%23ffffff' stroke-width='0.6' fill='none' opacity='0.06'/%3E%3Ccircle cx='36' cy='36' r='1.5' fill='%23ffffff' opacity='0.10'/%3E%3Ccircle cx='4' cy='36' r='1' fill='%23ffffff' opacity='0.07'/%3E%3Ccircle cx='68' cy='36' r='1' fill='%23ffffff' opacity='0.07'/%3E%3Ccircle cx='36' cy='4' r='1' fill='%23ffffff' opacity='0.07'/%3E%3Ccircle cx='36' cy='68' r='1' fill='%23ffffff' opacity='0.07'/%3E%3C/svg%3E") !important;
+	background-size: 72px 72px !important;
+	border-top: none !important;
+	border-bottom: none !important;
 }
 .cafe-commit .kt-row-column-wrap,
 .cafe-commit .wp-block-kadence-column,
@@ -725,23 +728,23 @@ p { text-wrap: pretty; line-height: 1.75; }
 .cafe-commit h2, .cafe-commit h3,
 .cafe-commit .kt-blocks-info-box-title,
 .cafe-commit .kt-blocks-info-box-text {
-	color: rgba(245, 235, 220, 0.88) !important;
+	color: rgba(240, 232, 216, 0.90) !important;
 	font-family: var(--global-body-font-family) !important;
 }
 .cafe-commit .kt-blocks-info-box-title {
-	font-weight: 600 !important;
-	letter-spacing: 0.01em !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.02em !important;
 	font-size: 15px !important;
+	color: #ffffff !important;
 }
 .cafe-commit .kt-blocks-info-box-text {
 	font-weight: 400 !important;
 	font-size: 14px !important;
-	line-height: 1.6 !important;
+	line-height: 1.65 !important;
+	color: rgba(240, 232, 216, 0.75) !important;
 }
 .cafe-commit .cafe-commit__icon,
-.cafe-commit .cafe-icon { color: var(--cafe-accent) !important; }
-/* Divider giữa hero và commit */
-.cafe-commit { border-top: 1px solid rgba(200, 175, 145, 0.08) !important; }
+.cafe-commit .cafe-icon { color: #D4A96A !important; } /* vàng đồng ấm — nổi trên men ngọc */
 
 /* === SECTION DIVIDER: Gradient line mỏng === */
 .cafe-cats,
@@ -818,9 +821,10 @@ p { text-wrap: pretty; line-height: 1.75; }
 	50% { box-shadow: 0 0 0 6px rgba(140, 35, 24, 0.12); }
 }
 
-/* Commit icons animation */
+/* Commit icons animation — vàng đồng nổi trên men ngọc */
 .cafe-commit .cafe-icon {
 	animation: cafe-icon-pulse 3s ease-in-out infinite;
+	color: #D4A96A !important;
 }
 .cafe-commit .wp-block-kadence-column:nth-child(2) .cafe-icon {
 	animation-delay: 1s;
@@ -1096,25 +1100,58 @@ body::after {
    CAFEGIANG STYLE: Section header + Product card
    ====================================================== */
 
-/* --- Section heading: căn giữa --- */
+/* --- Section heading: sans-serif uppercase, giống font item sản phẩm --- */
 .cafe-best h2,
-.cafe-cats h2 {
+.cafe-cats h2,
+.cafe-cats-header h2 {
+	font-family: var(--global-body-font-family) !important;
+	font-weight: 700 !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.10em !important;
+	line-height: 1.2 !important;
 	text-align: center !important;
 	margin-bottom: 8px !important;
 }
 
 /* Eyebrow label phía trên heading section */
 .cafe-best h6,
-.cafe-best .cafe-eyebrow-text {
+.cafe-cats h6,
+.cafe-cats-header h6,
+.cafe-best .cafe-eyebrow-text,
+.cafe-cats .cafe-eyebrow-text {
 	font-family: var(--global-body-font-family) !important;
 	font-size: 10px !important;
 	font-weight: 700 !important;
-	letter-spacing: 0.24em !important;
+	letter-spacing: 0.28em !important;
 	text-transform: uppercase !important;
-	color: var(--cafe-ink) !important;
+	color: var(--global-palette1) !important;
 	text-align: center !important;
 	margin-bottom: 10px !important;
-	opacity: 0.65;
+}
+
+/* Tên danh mục (h3): UPPERCASE + sans-serif + letter-spaced */
+.cafe-cats h3,
+.cafe-cats h3 a {
+	font-family: var(--global-body-font-family) !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	letter-spacing: 0.14em !important;
+	text-transform: uppercase !important;
+	line-height: 1.4 !important;
+	color: var(--cafe-ink) !important;
+	margin-bottom: 4px !important;
+}
+.cafe-cats h3 a:hover {
+	color: var(--global-palette1) !important;
+}
+
+/* Mô tả dưới tên danh mục: giữ lowercase, nhỏ, mờ */
+.cafe-cats p {
+	font-family: var(--global-body-font-family) !important;
+	font-size: 13px !important;
+	color: var(--global-palette6) !important;
+	line-height: 1.55 !important;
+	margin-top: 4px !important;
 }
 
 /* --- Product card: không viền, không shadow --- */
