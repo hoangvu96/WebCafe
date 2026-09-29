@@ -73,6 +73,30 @@ add_filter(
 	10,
 	3
 );
+/**
+ * Việt hoá nút sản phẩm WooCommerce — "Select options" → "Chọn".
+ * WooCommerce dùng chuỗi này cho sản phẩm có biến thể (variable product).
+ */
+add_filter(
+	'gettext',
+	static function ( string $translation, string $text, string $domain ): string {
+		if ( 'woocommerce' !== $domain ) {
+			return $translation;
+		}
+		$map = array(
+			'Select options' => 'Chọn',
+			'Add to cart'    => 'Thêm vào giỏ',
+			'Read more'      => 'Xem thêm',
+			'Out of stock'   => 'Hết hàng',
+			'In stock'       => 'Còn hàng',
+			'Sale!'          => 'Giảm giá',
+		);
+		return isset( $map[ $text ] ) ? $map[ $text ] : $translation;
+	},
+	10,
+	3
+);
+
 add_filter(
 	'gettext_with_context',
 	static function ( string $translation, string $text, string $context, string $domain ): string {

@@ -49,7 +49,6 @@ docker compose run --rm -T --entrypoint tar wpcli -C /var/www/html/wp-content -c
   --exclude='uploads/wc-logs' \
   --exclude='uploads/kadence_starter_templates' \
   --exclude='*demo-*-import-file*' \
-  --exclude='*-[0-9]*x[0-9]*.*' \
   uploads </dev/null
 
 ls -lh snapshot

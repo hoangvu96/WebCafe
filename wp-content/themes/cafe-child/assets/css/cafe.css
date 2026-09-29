@@ -392,6 +392,16 @@ main#primary,
 	background-color: #ffffff !important;
 }
 
+/* Shop page header banner — loại bỏ màu beige mặc định của Kadence */
+.entry-header.product-archive-title,
+.woocommerce-products-header,
+.kadence-archive-title-bg,
+.woo-archive-description,
+.archive-title-bg {
+	background-color: #ffffff !important;
+	background-image: none !important;
+}
+
 /* ---- Section spacing — breathing room cho các section nội dung ---- */
 .cafe-cats,
 .cafe-best,

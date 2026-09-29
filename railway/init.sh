@@ -51,8 +51,7 @@ ensure_uploads() {
         echo "$LOG Khôi phục uploads từ snapshot..."
         tar -C /var/www/html/wp-content -xzf /railway/uploads.tar.gz
         chown -R www-data:www-data "$uploads_dir"
-        echo "$LOG Tạo lại thumbnail ảnh sản phẩm..."
-        $WP media regenerate --all --yes --quiet 2>/dev/null || true
+        echo "$LOG Đang bỏ qua tạo thumbnail (đã có trong snapshot)..."
         echo "$LOG Uploads đã khôi phục."
     fi
 }
