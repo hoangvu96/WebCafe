@@ -1,10 +1,13 @@
 #!/bin/bash
-# Script khởi tạo WordPress lần đầu trên Railway.
+# Script khởi tạo WordPress trên Railway.
 # Chạy ngầm sau khi Apache đã start (gọi từ entrypoint.sh &).
+# Luôn đảm bảo plugins được cài (container restart sẽ mất plugin files).
 set -e
 
 LOG="[Railway Init]"
 WP="wp --allow-root --path=/var/www/html"
+# Railway MySQL 9.4 uses self-signed TLS cert; --skip-ssl bypasses client-side validation
+MYSQL_OPTS="-h${MYSQL_HOST} -P${MYSQL_PORT:-3306} -u${MYSQL_USER} -p${MYSQL_PASSWORD} --skip-ssl"
 
 # ─── 1. Chờ wp-config.php được tạo bởi WordPress entrypoint ──────────────
 echo "$LOG Chờ wp-config.php..."
@@ -13,12 +16,14 @@ echo "$LOG wp-config.php sẵn sàng."
 
 # ─── 2. Chờ MySQL sẵn sàng ────────────────────────────────────────────────
 echo "$LOG Chờ MySQL tại ${MYSQL_HOST}:${MYSQL_PORT:-3306}..."
-until mysqladmin ping \
-    -h"${MYSQL_HOST}" \
-    -P"${MYSQL_PORT:-3306}" \
-    -u"${MYSQL_USER}" \
-    -p"${MYSQL_PASSWORD}" \
-    --silent 2>/dev/null; do
+ATTEMPTS=0
+until mysqladmin ping $MYSQL_OPTS --connect-timeout=5 --silent 2>/dev/null; do
+    ATTEMPTS=$((ATTEMPTS + 1))
+    if [ $((ATTEMPTS % 5)) -eq 0 ]; then
+        TCP_RESULT=$(timeout 5 bash -c "</dev/tcp/${MYSQL_HOST}/${MYSQL_PORT:-3306}" 2>/dev/null && echo "TCP OK" || echo "TCP FAILED")
+        PING_ERR=$(mysqladmin ping $MYSQL_OPTS --connect-timeout=3 2>&1 | sed 's/password "[^"]*"/password "***"/')
+        echo "$LOG   Lần $ATTEMPTS: TCP=$TCP_RESULT | $PING_ERR"
+    fi
     sleep 3
 done
 echo "$LOG MySQL sẵn sàng."
@@ -26,8 +31,33 @@ echo "$LOG MySQL sẵn sàng."
 # ─── 3. Kiểm tra đã khởi tạo chưa ────────────────────────────────────────
 CURRENT_URL=$($WP option get siteurl 2>/dev/null || echo "")
 
+# ─── Helper: cài plugins thiếu (container restart xóa filesystem) ──────────
+ensure_plugins() {
+    while IFS=, read -r plugin version; do
+        [ -z "$plugin" ] || [ "$plugin" = "cafe-core" ] && continue
+        if ! $WP plugin is-installed "$plugin" 2>/dev/null; then
+            echo "$LOG   Cài plugin thiếu: $plugin ${version:+($version)}"
+            $WP plugin install "$plugin" ${version:+--version="$version"} --quiet || true
+        fi
+    done < /railway/plugins.txt
+    $WP plugin activate woocommerce kadence-blocks kadence-starter-templates cafe-core --quiet || true
+}
+
 if [ -n "$CURRENT_URL" ]; then
     echo "$LOG Đã khởi tạo tại: $CURRENT_URL"
+
+    # Đảm bảo parent theme kadence được cài và cafe-child active
+    if ! $WP theme is-installed kadence 2>/dev/null; then
+        echo "$LOG Cài parent theme kadence..."
+        $WP theme install kadence 2>&1 | sed "s/^/$LOG   /" || true
+    fi
+
+    # Đảm bảo plugins tồn tại trên disk (container mới sẽ không có plugin files)
+    echo "$LOG Kiểm tra plugins..."
+    ensure_plugins
+
+    echo "$LOG Kích hoạt cafe-child..."
+    $WP theme activate cafe-child 2>&1 | sed "s/^/$LOG   /" || true
 
     # Cập nhật URL nếu domain thay đổi (re-deploy sang domain mới)
     TARGET_URL="${WP_URL:-$CURRENT_URL}"
@@ -45,12 +75,7 @@ fi
 echo "$LOG Lần đầu khởi tạo - import snapshot..."
 
 echo "$LOG Import database..."
-mysql \
-    -h"${MYSQL_HOST}" \
-    -P"${MYSQL_PORT:-3306}" \
-    -u"${MYSQL_USER}" \
-    -p"${MYSQL_PASSWORD}" \
-    "${MYSQL_DATABASE}" < /railway/db.sql
+mysql $MYSQL_OPTS "${MYSQL_DATABASE}" < /railway/db.sql
 echo "$LOG Database imported."
 
 # ─── 5. Cài plugins ───────────────────────────────────────────────────────
@@ -88,7 +113,10 @@ if [ -n "${STAFF_PASSWORD:-}" ]; then
 fi
 
 # ─── 9. Kích hoạt theme + flush ───────────────────────────────────────────
-$WP theme activate cafe-child --quiet 2>/dev/null || true
+if ! $WP theme is-installed kadence 2>/dev/null; then
+    $WP theme install kadence 2>&1 | sed "s/^/$LOG   /" || true
+fi
+$WP theme activate cafe-child 2>&1 | sed "s/^/$LOG   /" || true
 $WP rewrite flush
 $WP cache flush
 

@@ -22,11 +22,11 @@ if [ -z "${WP_URL:-}" ] && [ -n "${RAILWAY_PUBLIC_DOMAIN:-}" ]; then
     export WP_URL="https://${RAILWAY_PUBLIC_DOMAIN}"
 fi
 
-# ─── Cấu hình Apache lắng nghe trên $PORT (Railway yêu cầu) ───────────────
-APACHE_PORT="${PORT:-80}"
-sed -i "s/Listen 80/Listen $APACHE_PORT/g" /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:80>/<VirtualHost *:$APACHE_PORT>/g" \
-    /etc/apache2/sites-enabled/000-default.conf
+# ─── Fix Apache MPM conflict (apt-get có thể enable cả mpm_event lẫn mpm_prefork) ──
+rm -f /etc/apache2/mods-enabled/mpm_event.conf \
+      /etc/apache2/mods-enabled/mpm_event.load \
+      /etc/apache2/mods-enabled/mpm_worker.conf \
+      /etc/apache2/mods-enabled/mpm_worker.load
 
 # ─── Chạy init trong nền (sau khi Apache khởi động) ──────────────────────
 /railway/init.sh &

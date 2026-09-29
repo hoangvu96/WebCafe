@@ -1,9 +1,14 @@
 FROM wordpress:php8.2-apache
 
 # Install WP-CLI + mysql client
+# apt-get có thể enable thêm mpm_event gây conflict → xóa trực tiếp symlink
 RUN apt-get update && apt-get install -y --no-install-recommends \
         default-mysql-client \
     && rm -rf /var/lib/apt/lists/* \
+    && rm -f /etc/apache2/mods-enabled/mpm_event.conf \
+             /etc/apache2/mods-enabled/mpm_event.load \
+             /etc/apache2/mods-enabled/mpm_worker.conf \
+             /etc/apache2/mods-enabled/mpm_worker.load \
     && curl -sS -o /usr/local/bin/wp \
         https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
