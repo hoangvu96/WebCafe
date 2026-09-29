@@ -43,6 +43,18 @@ ensure_plugins() {
     $WP plugin activate woocommerce kadence-blocks kadence-starter-templates cafe-core --quiet || true
 }
 
+# ─── Helper: khôi phục uploads nếu thư mục rỗng (container restart) ────────
+ensure_uploads() {
+    local uploads_dir="/var/www/html/wp-content/uploads"
+    # Kiểm tra có file/thư mục nào không (ngoài thư mục .htaccess hoặc rỗng hẳn)
+    if [ ! -d "$uploads_dir" ] || [ -z "$(ls -A "$uploads_dir" 2>/dev/null)" ]; then
+        echo "$LOG Khôi phục uploads từ snapshot..."
+        tar -C /var/www/html/wp-content -xzf /railway/uploads.tar.gz
+        chown -R www-data:www-data "$uploads_dir"
+        echo "$LOG Uploads đã khôi phục."
+    fi
+}
+
 if [ -n "$CURRENT_URL" ]; then
     echo "$LOG Đã khởi tạo tại: $CURRENT_URL"
 
@@ -55,6 +67,9 @@ if [ -n "$CURRENT_URL" ]; then
     # Đảm bảo plugins tồn tại trên disk (container mới sẽ không có plugin files)
     echo "$LOG Kiểm tra plugins..."
     ensure_plugins
+
+    # Đảm bảo uploads tồn tại trên disk (container mới sẽ không có ảnh)
+    ensure_uploads
 
     echo "$LOG Kích hoạt cafe-child..."
     $WP theme activate cafe-child 2>&1 | sed "s/^/$LOG   /" || true
