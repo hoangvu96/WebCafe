@@ -43,6 +43,18 @@ ensure_plugins() {
     $WP plugin activate woocommerce kadence-blocks kadence-starter-templates cafe-core --quiet || true
 }
 
+# ─── Helper: cài language packs tiếng Việt (mất sau container restart) ─────
+ensure_languages() {
+    local lang_dir="/var/www/html/wp-content/languages"
+    if [ ! -f "$lang_dir/vi.mo" ] && [ ! -f "$lang_dir/vi_VN.mo" ]; then
+        echo "$LOG Cài language packs tiếng Việt..."
+        $WP language core install vi --activate --quiet 2>/dev/null || true
+        $WP language plugin install --all vi --quiet 2>/dev/null || true
+        $WP language theme install --all vi --quiet 2>/dev/null || true
+        echo "$LOG Language packs đã cài."
+    fi
+}
+
 # ─── Helper: khôi phục uploads nếu thư mục rỗng (container restart) ────────
 ensure_uploads() {
     local uploads_dir="/var/www/html/wp-content/uploads"
@@ -102,6 +114,9 @@ if [ -n "$CURRENT_URL" ]; then
     # Đảm bảo uploads tồn tại trên disk (container mới sẽ không có ảnh)
     ensure_uploads
 
+    # Đảm bảo language packs tiếng Việt tồn tại trên disk
+    ensure_languages
+
     echo "$LOG Kích hoạt cafe-child..."
     $WP theme activate cafe-child 2>&1 | sed "s/^/$LOG   /" || true
 
@@ -159,7 +174,14 @@ if [ -n "${STAFF_PASSWORD:-}" ]; then
     echo "$LOG Mật khẩu nhân viên đã đặt."
 fi
 
-# ─── 9. Kích hoạt theme + flush ───────────────────────────────────────────
+# ─── 9. Cài language packs tiếng Việt ────────────────────────────────────
+echo "$LOG Cài language packs tiếng Việt..."
+$WP language core install vi --activate --quiet 2>/dev/null || true
+$WP language plugin install --all vi --quiet 2>/dev/null || true
+$WP language theme install --all vi --quiet 2>/dev/null || true
+echo "$LOG Language packs đã cài."
+
+# ─── 10. Kích hoạt theme + flush ──────────────────────────────────────────
 if ! $WP theme is-installed kadence 2>/dev/null; then
     $WP theme install kadence 2>&1 | sed "s/^/$LOG   /" || true
 fi

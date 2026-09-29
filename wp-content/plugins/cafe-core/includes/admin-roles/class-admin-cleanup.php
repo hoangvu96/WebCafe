@@ -19,6 +19,7 @@ final class AdminCleanup {
 	/** Menu ẩn với MỌI người kể cả admin (hoàn toàn không dùng cho site này). */
 	private const ALWAYS_HIDDEN = array(
 		'edit.php',                  // Bài viết (blog)
+		'edit.php?post_type=page',   // Trang (Pages)
 		'edit-comments.php',         // Bình luận
 		'tools.php',                 // Công cụ WP
 		'index.php',                 // Trang quản trị WP (thay bằng Cafe Dashboard)
